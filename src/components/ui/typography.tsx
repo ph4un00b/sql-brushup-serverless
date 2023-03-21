@@ -1,9 +1,11 @@
 import { type PropsWithChildren } from "react";
+import Balancer from "react-wrap-balancer";
 
 export function H1({ children }: PropsWithChildren) {
 	return (
-		<h1 className="scroll-m-20 text-6xl font-extrabold tracking-tight lg:text-5xl">
+		<h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
 			{children}
+			{/* <Balancer>{children}</Balancer> */}
 		</h1>
 	);
 }
@@ -11,11 +13,11 @@ export function H1({ children }: PropsWithChildren) {
 export function H2({ children }: PropsWithChildren) {
 	return (
 		<h2 className="mt-10 scroll-m-20 border-b border-b-slate-200 pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0 dark:border-b-slate-700">
-			{children}
+			{/* {children} */}
+			<Balancer>{children}</Balancer>
 		</h2>
 	);
 }
-
 
 export function InlineCode({ children }: PropsWithChildren) {
 	return (
