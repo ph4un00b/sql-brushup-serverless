@@ -1,6 +1,6 @@
 import { RadioGroup } from "@headlessui/react";
 import { signIn, signOut, useSession } from "next-auth/react";
-import { useState } from "react";
+import { type ComponentPropsWithoutRef, useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Blockquote, H1, H2 } from "~/components/ui/typography";
 import { api } from "~/utils/api";
@@ -111,7 +111,7 @@ function MyRadioGroup() {
 							}
                     relative flex cursor-pointer rounded-lg px-5 py-4 shadow-md focus:outline-none`}
 					>
-						{({ active, checked }) => (
+						{({ checked }) => (
 							<>
 								<div className="flex w-full items-center justify-between">
 									<div className="flex items-center">
@@ -151,7 +151,10 @@ function MyRadioGroup() {
 	);
 }
 
-function CheckIcon(props) {
+/**
+ * @see https://react-typescript-cheatsheet.netlify.app/docs/basic/getting-started/basic_type_example/
+ */
+function CheckIcon(props: ComponentPropsWithoutRef<"svg">) {
 	return (
 		<svg viewBox="0 0 24 24" fill="none" {...props}>
 			<circle cx={12} cy={12} r={12} fill="#fff" opacity="0.2" />
@@ -166,7 +169,7 @@ function CheckIcon(props) {
 	);
 }
 
-const Form = () => {
+function Form() {
 	const [message, setMessage] = useState("");
 	const { data: session, status } = useSession();
 
@@ -194,7 +197,8 @@ const Form = () => {
 		},
 	});
 
-	if (status !== "authenticated") return null;
+	if (status !== "authenticated")
+		return null;
 
 	return (
 		<form
@@ -215,8 +219,7 @@ const Form = () => {
 				minLength={2}
 				maxLength={100}
 				value={message}
-				onChange={(event) => setMessage(event.target.value)}
-			/>
+				onChange={(event) => setMessage(event.target.value)} />
 			<Button
 				className=""
 				variant="subtle"
@@ -226,12 +229,13 @@ const Form = () => {
 			</Button>
 		</form>
 	);
-};
+}
 
-const GuestbookEntries = () => {
+function GuestbookEntries() {
 	const { data: guestbookEntries, isLoading } = api.guestbook.getAll.useQuery();
 
-	if (isLoading) return <div>Fetching messages...</div>;
+	if (isLoading)
+		return <div>Fetching messages...</div>;
 
 	return (
 		<div className="flex flex-col gap-4">
@@ -245,4 +249,4 @@ const GuestbookEntries = () => {
 			})}
 		</div>
 	);
-};
+}
