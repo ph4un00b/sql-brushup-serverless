@@ -26,6 +26,12 @@ const plans = [
 	},
 ];
 
+/**
+ * @todo share sidebar
+ * @see https://nextjs.org/docs/basic-features/layouts#per-page-layouts
+ * @see https://dev.to/jaredm/guide-to-layouts-and-page-specific-layouts-in-nextjs-k2m
+ */
+
 export default function Home() {
 	const { data: session, status } = useSession();
 
