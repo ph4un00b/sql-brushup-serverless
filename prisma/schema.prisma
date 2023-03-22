@@ -17,6 +17,16 @@ datasource db {
     relationMode = "prisma"
 }
 
+
+model Cat {
+    id        String   @id @default(cuid())
+		ownerId		String
+    name      String
+		owner			User		 @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+    @@index([ownerId])
+}
+
 model Guestbook {
     id        String   @id @default(cuid())
     name      String
@@ -69,6 +79,7 @@ model User {
     image         String?
     accounts      Account[]
     sessions      Session[]
+    cats      		Cat[]
 }
 
 model VerificationToken {
