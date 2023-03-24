@@ -195,7 +195,9 @@ function Form() {
 		},
 		// If the mutation fails,
 		// use the context returned from onMutate to roll back
-		onError: (_err, _message, context) => {
+		onError: (err, _message, context) => {
+			const errors = err.data?.zodError?.fieldErrors.message;
+			console.log({ errors })
 			utils.guestbook.getAll.setData(undefined, context?.previous);
 		},
 		onSettled: async () => {
