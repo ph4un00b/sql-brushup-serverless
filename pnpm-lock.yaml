@@ -6,6 +6,7 @@ specifiers:
   '@planetscale/database': ^1.6.0
   '@prisma/client': ^4.9.0
   '@tanstack/react-query': ^4.20.2
+  '@total-typescript/ts-reset': ^0.4.2
   '@trpc/client': ^10.9.0
   '@trpc/next': ^10.9.0
   '@trpc/react-query': ^10.9.0
@@ -67,6 +68,7 @@ dependencies:
   zod: 3.21.4
 
 devDependencies:
+  '@total-typescript/ts-reset': 0.4.2
   '@types/eslint': 8.21.3
   '@types/node': 18.15.3
   '@types/prettier': 2.7.2
@@ -392,6 +394,10 @@ packages:
       react-dom: 18.2.0_react@18.2.0
       use-sync-external-store: 1.2.0_react@18.2.0
     dev: false
+
+  /@total-typescript/ts-reset/0.4.2:
+    resolution: {integrity: sha512-vqd7ZUDSrXFVT1n8b2kc3LnklncDQFPvR58yUS1kEP23/nHPAO9l1lMjUfnPrXYYk4Hj54rrLKMW5ipwk7k09A==}
+    dev: true
 
   /@trpc/client/10.17.0_@trpc+server@10.17.0:
     resolution: {integrity: sha512-HkOIgOOJ7LUmDv/rOKTbmO1x9xJuvR0uzTPOiUG8qD7zvxhm+r7so5/HQq32Ne9Tx7lY4vi//mhz9AWNdAjdaQ==}

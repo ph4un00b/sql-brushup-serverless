@@ -34,6 +34,7 @@
     "zod": "^3.20.6"
   },
   "devDependencies": {
+    "@total-typescript/ts-reset": "^0.4.2",
     "@types/eslint": "^8.21.1",
     "@types/node": "^18.14.0",
     "@types/prettier": "^2.7.2",
