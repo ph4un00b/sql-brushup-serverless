@@ -5,6 +5,7 @@
         "headlessui",
         "Planetscale",
         "refetches",
+        "Tablita",
         "tailwindcss",
         "trpc"
     ]
