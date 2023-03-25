@@ -16,6 +16,10 @@ const db = new Client({
 	password: env.DATABASE_PASS
 });
 
+async function sleep(ms: number) {
+	return new Promise(res => setTimeout(res, ms));
+}
+
 export const exampleRouter = createTRPCRouter({
 	hello: publicProcedure
 		.input(z.object({ text: z.string() }))
@@ -25,13 +29,14 @@ export const exampleRouter = createTRPCRouter({
 			};
 		}),
 
-	getAll: publicProcedure.query(async () => {
+	join: publicProcedure.query(async () => {
 		const queryStart = performance.now();
 		const conn = db.connection();
 		const { rows, time } = await conn.execute("SELECT * FROM User JOIN Cat;");
-		const queryTime = performance.now() - queryStart;
-		console.log({ time, queryTime });
-		return { rows, time };
+		const serverQueryTime = performance.now() - queryStart;
+		await sleep(3000);
+		console.log({ time, serverQueryTime });
+		return { time, serverQueryTime, rows };
 	}),
 
 	getSecretMessage: protectedProcedure.query(() => {
