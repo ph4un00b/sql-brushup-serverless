@@ -7,6 +7,8 @@ export default function Sqlito() {
 	const { data: join } = api.innerJoin.join.useQuery();
 	const { data: joinOn } = api.innerJoin.joinOn.useQuery();
 	const { data: joinOnWhere } = api.innerJoin.joinOnWhere.useQuery();
+	const { data: joinN1 } = api.innerJoin.joinN1.useQuery();
+	const { data: joinN1_2Q } = api.innerJoin.joinN1_2Q.useQuery();
 
 	// if (isLoading)
 	// 	return <div>Fetching messages...</div>;
@@ -18,6 +20,8 @@ export default function Sqlito() {
 			<Tablita data={join} title="inner join" />
 			<Tablita data={joinOn} title="join on" />
 			<Tablita data={joinOnWhere} title="join on where" />
+			<Tablita data={joinN1} title="join n+1 problem" />
+			<Tablita data={joinN1_2Q} title="join n+1 only 2 queries" />
 		</div>
 	);
 }
