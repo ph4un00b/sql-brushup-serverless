@@ -2,6 +2,16 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 async function main() {
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+	await prisma.vaccination.create({
+		// where: { cat_name: "Ms. Fluff" },
+		// update: {},
+		// create: {
+		data: {
+			cat_name: "Ms. Fluff"
+		}
+	});
+
 	const amir = await prisma.user.upsert({
 		where: { email: "amir@gmail.com" },
 		update: {},

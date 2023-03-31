@@ -120,8 +120,66 @@ export const innerJoinRouter = createTRPCRouter({
 
 		const out = { tag: "join-n+1-2-queries", serverQueryTime };
 		console.log(out);
-		if (enc("012345", 1) !== "135024") throw "bad!";
+		return { ...out, rows };
+	}),
+	ignore: publicProcedure.query(async () => {
+		const queryStart = performance.now();
+		const conn = db.connection();
+		const { rows, time } = await conn.execute(`
+			INSERT IGNORE INTO Vaccination (cat_name) VALUES ('Ms. Fluff')
+			`);
+		const serverQueryTime = performance.now() - queryStart;
+		await sleep(3000);
 
+		const out = { tag: "ignore", time, serverQueryTime };
+		console.log(out);
+		return { ...out, rows };
+	}),
+	notIgnore: publicProcedure.query(async () => {
+		const queryStart = performance.now();
+		const conn = db.connection();
+		try {
+			// eslint-disable-next-line no-var
+			var { rows, time } = await conn.execute(`
+				INSERT INTO Vaccination (cat_name) VALUES ('Ms. Fluff')
+				`);
+		} catch (error) {
+			const serverQueryTime = performance.now() - queryStart;
+			const out = { tag: "not-ignore", serverQueryTime };
+			console.log(out);
+			return { ...out, rows: [] };
+		}
+		const serverQueryTime = performance.now() - queryStart;
+		await sleep(3000);
+
+		const out = { tag: "not-ignore", time, serverQueryTime };
+		console.log(out);
+		return { ...out, rows };
+	}),
+	virtual: publicProcedure.query(async () => {
+		const queryStart = performance.now();
+		const conn = db.connection();
+		const { rows, time } = await conn.execute(`
+			SELECT email_quoted, domain_virtual from json_test;
+			`);
+		const serverQueryTime = performance.now() - queryStart;
+		await sleep(3000);
+
+		const out = { tag: "computed virtual", time, serverQueryTime };
+		console.log(out);
+		return { ...out, rows };
+	}),
+	stored: publicProcedure.query(async () => {
+		const queryStart = performance.now();
+		const conn = db.connection();
+		const { rows, time } = await conn.execute(`
+			SELECT email_unquoted, domain_stored from json_test;
+			`);
+		const serverQueryTime = performance.now() - queryStart;
+		await sleep(3000);
+
+		const out = { tag: "computed stored", time, serverQueryTime };
+		console.log(out);
 		return { ...out, rows };
 	}),
 
@@ -164,52 +222,4 @@ async function peopleAndCats() {
 	}
 	const serverQueryTime = performance.now() - queryStart;
 	return { rows: results, serverQueryTime };
-}
-
-function enc(S: string) {
-	const len = S.length;
-	const res = new Array(S.length).fill("");
-	// oeoeoe
-	const middle = Math.floor(len / 2);
-
-	// for (let index = 0; index < S.length; index++) {
-	// 	const letra = S[index];
-	// 	if (index % 2 == 0) {
-	// 		res[middle] = letra;
-	// 		middle++;
-	// 	} else {
-	// 		res[left] = letra;
-	// 		left++;
-	// 	}
-	// }
-
-	let par = middle;
-	let impar = -1;
-
-	const moves = new Array(S.length).fill(0);
-	for (let index = 0; index < middle * 2; index++) {
-		if (index % 2 === 0) {
-			console.log(par);
-			moves[index] = par;
-			par--;
-		} else {
-			console.log(impar);
-			moves[index] = impar;
-			impar--;
-		}
-	}
-
-
-	for (let index = 0; index < res.length; index++) {
-		console.log({ index, m: moves[index], diff: moves[index] + index });
-		res[moves[index]] = S[index];
-	}
-
-	// eeeooo
-	console.log({ res, moves });
-	return res.join("");
-}
-
-function dec(S: string) {
-
 }

@@ -4,6 +4,7 @@
         "clsx",
         "headlessui",
         "Planetscale",
+        "pscale",
         "refetches",
         "Tablita",
         "tailwindcss",

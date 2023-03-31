@@ -9,6 +9,10 @@ export default function Sqlito() {
 	const { data: joinOnWhere } = api.innerJoin.joinOnWhere.useQuery();
 	const { data: joinN1 } = api.innerJoin.joinN1.useQuery();
 	const { data: joinN1_2Q } = api.innerJoin.joinN1_2Q.useQuery();
+	const { data: ignore } = api.innerJoin.ignore.useQuery();
+	const { data: notIgnore } = api.innerJoin.notIgnore.useQuery();
+	const { data: virtual } = api.innerJoin.virtual.useQuery();
+	const { data: stored } = api.innerJoin.stored.useQuery();
 
 	// if (isLoading)
 	// 	return <div>Fetching messages...</div>;
@@ -22,6 +26,10 @@ export default function Sqlito() {
 			<Tablita data={joinOnWhere} title="join on where" />
 			<Tablita data={joinN1} title="join n+1 problem" />
 			<Tablita data={joinN1_2Q} title="join n+1 only 2 queries" />
+			<Tablita data={ignore} title="ignoring errors" />
+			<Tablita data={notIgnore} title="not ignoring errors" />
+			<Tablita data={virtual} title="virtual computed column quoted" />
+			<Tablita data={stored} title="stored computed column unquoted" />
 		</div>
 	);
 }

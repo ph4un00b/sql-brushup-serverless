@@ -17,6 +17,9 @@ datasource db {
     relationMode = "prisma"
 }
 
+model Vaccination {
+	cat_name	String	 @unique
+}
 
 model Cat {
     id        String   @id @default(cuid())
