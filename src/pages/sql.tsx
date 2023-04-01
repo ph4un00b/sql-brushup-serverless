@@ -33,7 +33,7 @@ export default function Sqlito() {
 			<Tablita data={virtual} title="virtual computed column quoted" />
 			<Tablita data={stored} title="stored computed column unquoted" />
 			<Tablita data={onConflict} title="on conflict" />
-			<Tablita data={doUpdate} title="on conflict" />
+			<Tablita data={doUpdate} title="on conflict update" />
 		</div>
 	);
 }
