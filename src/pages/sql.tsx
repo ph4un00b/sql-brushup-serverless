@@ -90,7 +90,10 @@ type TablaProps = {
 function Tablita({ title, data }: TablaProps) {
 	return (
 		<section className="overflow-x-auto">
-			<H2>{title}</H2>
+			<H2>
+				{title} - {data?.serverQueryTime ? `${data.serverQueryTime.toFixed(0)}ms` : ""}
+				{data?.time ? `, ${data?.time.toFixed(0)}ms` : ""}
+			</H2>
 			<table className="table table-compact w-full">
 				<thead>
 					<tr>
