@@ -1,6 +1,7 @@
 import { Client } from "@planetscale/database";
 import fetch from "node-fetch";
 import { z } from "zod";
+import { createId } from "@paralleldrive/cuid2";
 import { env } from "~/env.mjs";
 
 import {
@@ -179,6 +180,44 @@ export const innerJoinRouter = createTRPCRouter({
 		await sleep(3000);
 
 		const out = { tag: "computed stored", time, serverQueryTime };
+		console.log(out);
+		return { ...out, rows };
+	}),
+	onConflict: publicProcedure.query(async () => {
+		const queryStart = performance.now();
+		const conn = db.connection();
+		try {
+			// eslint-disable-next-line no-var
+			var { rows, time } = await conn.execute(
+				`
+			INSERT INTO Visit (id, email, count) VALUES (?, 'jamon@jamon.com', 1);
+			`,
+				[createId()],
+			);
+		} catch (error) {
+			const serverQueryTime = performance.now() - queryStart;
+			const out = { tag: "on-conflict", serverQueryTime };
+			console.log(out);
+			return { ...out, rows: [] };
+		}
+		const serverQueryTime = performance.now() - queryStart;
+		await sleep(3000);
+
+		const out = { tag: "on-conflict", time, serverQueryTime };
+		console.log(out);
+		return { ...out, rows };
+	}),
+	doUpdate: publicProcedure.query(async () => {
+		const queryStart = performance.now();
+		const conn = db.connection();
+		const { rows, time } = await conn.execute(`
+			INSERT INTO Visit (id, email, count) VALUES (?, 'jamon@jamon.com', 1)
+      	ON DUPLICATE KEY UPDATE count = count + 1;
+			`, [createId()]);
+		const serverQueryTime = performance.now() - queryStart;
+		await sleep(3000);
+
+		const out = { tag: "do-update", time, serverQueryTime };
 		console.log(out);
 		return { ...out, rows };
 	}),

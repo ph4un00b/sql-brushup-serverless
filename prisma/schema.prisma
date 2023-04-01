@@ -17,6 +17,12 @@ datasource db {
     relationMode = "prisma"
 }
 
+model Visit {
+	id 		String	@id @default(cuid())
+	email String 	@db.VarChar(255) @unique
+	count Int			@db.SmallInt
+}
+
 model Vaccination {
 	cat_name	String	 @unique
 }

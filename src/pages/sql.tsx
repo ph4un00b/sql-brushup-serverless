@@ -13,6 +13,8 @@ export default function Sqlito() {
 	const { data: notIgnore } = api.innerJoin.notIgnore.useQuery();
 	const { data: virtual } = api.innerJoin.virtual.useQuery();
 	const { data: stored } = api.innerJoin.stored.useQuery();
+	const { data: onConflict } = api.innerJoin.onConflict.useQuery();
+	const { data: doUpdate } = api.innerJoin.doUpdate.useQuery();
 
 	// if (isLoading)
 	// 	return <div>Fetching messages...</div>;
@@ -30,6 +32,8 @@ export default function Sqlito() {
 			<Tablita data={notIgnore} title="not ignoring errors" />
 			<Tablita data={virtual} title="virtual computed column quoted" />
 			<Tablita data={stored} title="stored computed column unquoted" />
+			<Tablita data={onConflict} title="on conflict" />
+			<Tablita data={doUpdate} title="on conflict" />
 		</div>
 	);
 }
