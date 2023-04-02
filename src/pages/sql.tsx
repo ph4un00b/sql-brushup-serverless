@@ -16,6 +16,7 @@ export default function Sqlito() {
 	const { data: onConflict } = api.innerJoin.onConflict.useQuery();
 	const { data: doUpdate } = api.innerJoin.doUpdate.useQuery();
 	const { data: leftJoin } = api.innerJoin.leftJoin.useQuery();
+	const { data: rightJoin } = api.innerJoin.rightJoin.useQuery();
 
 	// if (isLoading)
 	// 	return <div>Fetching messages...</div>;
@@ -35,6 +36,7 @@ export default function Sqlito() {
 			<Tablita data={stored} title="stored computed column unquoted" />
 			<Tablita data={onConflict} title="on conflict" />
 			<Tablita data={leftJoin} title="left join" />
+			<Tablita data={rightJoin} title="right join" />
 		</div>
 	);
 }

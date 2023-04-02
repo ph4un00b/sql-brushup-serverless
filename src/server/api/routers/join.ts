@@ -108,13 +108,34 @@ export const innerJoinRouter = createTRPCRouter({
 		return { ...out, rows };
 	}),
 	/**
-	 * LEFT JOIN
+	 * LEFT OUTER JOIN
 	 * @description
 	 *
 	 * -> loop user:
 	 *	-> loop discount:
-	 *		-> filter user matches + no matches:
+	 *		-> filter user matches + no matches
+	 *
+	 * @see https://www.codeproject.com/Articles/33052/Visual-Representation-of-SQL-Joins
 	 */
+	rightJoin: publicProcedure.query(async () => {
+		const queryStart = performance.now();
+		const conn = db.connection();
+		const { rows, time } = await conn.execute(
+			`
+			SELECT
+				User.name AS name,
+				Discount.discountCode AS discount_code
+			FROM Discount RIGHT JOIN User
+				ON Discount.id = User.discountId
+			`,
+		);
+		const serverQueryTime = performance.now() - queryStart;
+		await sleep(3000);
+
+		const out = { tag: "right-join", time, serverQueryTime };
+		console.log(out);
+		return { ...out, rows };
+	}),
 	leftJoin: publicProcedure.query(async () => {
 		const queryStart = performance.now();
 		const conn = db.connection();
