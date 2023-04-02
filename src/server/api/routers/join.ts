@@ -107,6 +107,33 @@ export const innerJoinRouter = createTRPCRouter({
 		console.log(out);
 		return { ...out, rows };
 	}),
+	/**
+	 * LEFT JOIN
+	 * @description
+	 *
+	 * -> loop user:
+	 *	-> loop discount:
+	 *		-> filter user matches + no matches:
+	 */
+	leftJoin: publicProcedure.query(async () => {
+		const queryStart = performance.now();
+		const conn = db.connection();
+		const { rows, time } = await conn.execute(
+			`
+			SELECT
+				User.name AS name,
+				Discount.discountCode AS discount_code
+			FROM User LEFT JOIN Discount
+				ON User.discountId = Discount.id
+			`,
+		);
+		const serverQueryTime = performance.now() - queryStart;
+		await sleep(3000);
+
+		const out = { tag: "left-join", time, serverQueryTime };
+		console.log(out);
+		return { ...out, rows };
+	}),
 	joinN1: publicProcedure.query(async () => {
 		const { rows, serverQueryTime } = await peopleAndCats();
 		await sleep(3000);
