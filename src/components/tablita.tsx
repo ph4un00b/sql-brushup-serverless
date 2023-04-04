@@ -1,13 +1,18 @@
+import { ExecutedQuery } from "@planetscale/database";
 import { H2 } from "./ui/typography";
+
+export type QData = {
+  tag: string;
+  time?: number;
+  serverQueryTime: number;
+  rows: ExecutedQuery["rows"];
+  info?: ReadonlyArray<Record<string, unknown>>;
+};
 
 type TablaProps = {
   title: string;
   show?: boolean;
-  data: {
-    time: number;
-    serverQueryTime: number;
-    rows: (unknown[] | Record<string, unknown>)[];
-  } | undefined;
+  data?: QData;
 };
 
 export function Tablita({ title, data, show = true }: TablaProps) {
@@ -17,6 +22,13 @@ export function Tablita({ title, data, show = true }: TablaProps) {
         {title} -{" "}
         {data?.serverQueryTime ? `${data.serverQueryTime.toFixed(0)}ms` : ""}
         {data?.time ? `, ${data?.time.toFixed(0)}ms` : ""}
+        {data?.info?.[0]?.cardinality
+          ? `, ${data?.info?.[0]?.cardinality}`
+          : ""}
+        {data?.info?.[0]?.total ? ` / ${data?.info?.[0]?.total}` : ""}
+        {data?.info?.[0]?.selectivity
+          ? ` = ${data?.info?.[0]?.selectivity} selectivity`
+          : ""}
       </H2>
       {show
         ? (

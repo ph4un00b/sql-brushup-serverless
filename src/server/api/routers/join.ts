@@ -9,6 +9,7 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
+import { QData } from "~/components/tablita";
 
 const db = new Client({
   fetch,
@@ -282,8 +283,12 @@ async function peopleAndCats2Queries() {
   const queryStart = performance.now();
   const conn = db.connection();
   const results = [];
-  const { rows: people } = await conn.execute("SELECT * FROM User");
-  const { rows: cats } = await conn.execute("SELECT * FROM Cat");
+  const { rows: people } = await conn.execute(
+    "SELECT * FROM User",
+  ) as { rows: ReadonlyArray<Record<string, unknown>> };
+  const { rows: cats } = await conn.execute(
+    "SELECT * FROM Cat",
+  ) as { rows: ReadonlyArray<Record<string, unknown>> };
   for (const person of people) {
     for (const cat of cats) {
       if (cat.ownerId === person.id) {
@@ -299,12 +304,14 @@ async function peopleAndCats() {
   const queryStart = performance.now();
   const conn = db.connection();
   const results = [];
-  const { rows: people } = await conn.execute("SELECT * FROM User");
+  const { rows: people } = await conn.execute("SELECT * FROM User") as {
+    rows: ReadonlyArray<Record<string, unknown>>;
+  };
   for (const person of people) {
     const { rows: catsOwnedByPerson } = await conn.execute(
       "SELECT * FROM Cat WHERE Cat.ownerId = ?",
       [person.id],
-    );
+    ) as { rows: ReadonlyArray<Record<string, unknown>> };
 
     for (const cat of catsOwnedByPerson) {
       results.push({ person: person.name, cat: cat.name });

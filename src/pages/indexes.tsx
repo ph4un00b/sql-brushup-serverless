@@ -17,7 +17,7 @@ export default function Indexes() {
       <Tablita show={false} data={q100} title="100 names" />
       <Tablita show={false} data={q1k} title="1k names" />
       <Tablita show={false} data={q10k} title="10k names" />
-      <Tablita show={false} data={q50k} title="50k names" />
+      <Tablita data={q50k} title="50k names" />
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import { Client } from "@planetscale/database";
 import fetch from "node-fetch";
 import { z } from "zod";
+import { QData } from "~/components/tablita";
 import { env } from "~/env.mjs";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
@@ -64,18 +65,46 @@ export const indexesRouter = createTRPCRouter({
       return { ...out, rows };
     }),
   q50k: publicProcedure
-    .query(async ({ input }) => {
+    // .output(
+    //   z.object({
+    //     rows: z.array(z.any()),
+    //     tag: z.string(),
+    //     time: z.number(),
+    //     serverQueryTime: z.number(),
+    //     info: z.array(z.object({
+    //       cardinality: z.string(),
+    //       total: z.string(),
+    //       selectivity: z.string(),
+    //     })),
+    //   }),
+    // )
+    .query(async () => {
       const queryStart = performance.now();
       const conn = db.connection();
-      const { rows, time } = await conn.execute(
+      const { time } = await conn.execute(
         // | 50001 | 73b2dc65 |
         "SELECT names_50k.name FROM names_50k where names_50k.name = '73b2dc65'",
       );
       const serverQueryTime = performance.now() - queryStart;
       await sleep(3000);
 
-      const out = { tag: "50k", time, serverQueryTime };
+      const { rows } = await conn.execute(
+        // | 50001 | 73b2dc65 |
+        "explain select count(*) from names_50k",
+      );
+
+      const { rows: info } = await conn.execute(
+        // | 50001 | 73b2dc65 |
+        `
+				select
+				count(distinct name) as cardinality,
+				count(*) as total,
+				count(distinct name) / count(*) as selectivity from names_50k
+				`,
+      );
+      // explain select count(*) from names_50
+      const out = { tag: "50k", time, serverQueryTime, info };
       console.log(out);
-      return { ...out, rows };
+      return { ...out, rows } as QData;
     }),
 });
