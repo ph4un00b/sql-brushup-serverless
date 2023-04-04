@@ -1,4 +1,4 @@
--- windows ps:  Get-Content .\schema.sql | pscale shell flux-database dev
+-- windows ps:  Get-Content .\sql\schema.sql | pscale shell flux-database dev
 create table json_test (
 	`data` json,
 	`email_quoted` varchar(255) as (`data`->"$.email"),
