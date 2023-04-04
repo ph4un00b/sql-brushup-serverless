@@ -29,4 +29,10 @@
 	"eslint.options": {
 			"extensinons": [".ts", ".js", ".tsx", ".jsx"]
 	},
+	"[typescript]": {
+		"editor.defaultFormatter": "denoland.vscode-deno"
+	},
+	"[typescriptreact]": {
+		"editor.defaultFormatter": "denoland.vscode-deno"
+	}
 }
