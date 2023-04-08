@@ -17,6 +17,11 @@ datasource db {
   relationMode = "prisma"
 }
 
+model TestNames {
+  id   BigInt @id @default(autoincrement()) @db.UnsignedBigInt
+  name String @db.VarChar(255)
+}
+
 model Discount {
   id           String @id @default(cuid())
   discountCode String @db.VarChar(100)
