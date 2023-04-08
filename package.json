@@ -38,6 +38,7 @@
     "zod": "^3.20.6"
   },
   "devDependencies": {
+    "@faker-js/faker": "^7.6.0",
     "@total-typescript/ts-reset": "^0.4.2",
     "@types/eslint": "^8.21.1",
     "@types/node": "^18.15.3",

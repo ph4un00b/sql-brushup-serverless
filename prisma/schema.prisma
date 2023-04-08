@@ -17,9 +17,28 @@ datasource db {
   relationMode = "prisma"
 }
 
+model TestNamesCuidIndexed {
+  id   String @id @default(cuid())
+  name String @db.VarChar(250)
+
+  @@index([name])
+}
+
+model TestNamesIndexed {
+  id   BigInt @id @default(autoincrement()) @db.UnsignedBigInt
+  name String @db.VarChar(250)
+
+  @@index([name])
+}
+
+model TestNamesCuid {
+  id   String @id @default(cuid())
+  name String @db.VarChar(250)
+}
+
 model TestNames {
   id   BigInt @id @default(autoincrement()) @db.UnsignedBigInt
-  name String @db.VarChar(255)
+  name String @db.VarChar(250)
 }
 
 model Discount {
