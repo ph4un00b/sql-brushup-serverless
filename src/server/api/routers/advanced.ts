@@ -136,4 +136,58 @@ export const advancedRouter = createTRPCRouter({
       console.log(out);
       return { ...out, rows };
     }),
+
+  /**
+   * COVERING INDEXES
+   *
+   * When a query is executed, the engine traverses
+   *  the B-tree to find the required rows and then
+   * follows the pointer to fetch the corresponding
+   *  rows from the clustered index. However, with
+   *  a covering index, the engine can retrieve all
+   *  the data it needs from the secondary index itself,
+   *  without having to access the clustered index.
+   */
+  coveringIndex: publicProcedure
+    .query(async () => {
+      const queryStart = performance.now();
+      const conn = db.connection();
+      const { rows, time } = await conn.execute(
+        // select * from CompositePeople where id = 250000;
+        // 250000 | Er        | Davion34 | 1958-01-02 | Rudolph_Block@yahoo.com
+        `
+				EXPLAIN
+				SELECT id, firstName, birthday FROM CompositePeople
+				WHERE firstName = 'Er'
+				AND lastName = 'Davion34'
+				AND birthday = '1958-01-02'
+				`,
+      );
+      const serverQueryTime = performance.now() - queryStart;
+
+      const out = { tag: "covering", time, serverQueryTime };
+      console.log(out);
+      return { ...out, rows };
+    }),
+  noCovering: publicProcedure
+    .query(async () => {
+      const queryStart = performance.now();
+      const conn = db.connection();
+      const { rows, time } = await conn.execute(
+        // select * from CompositePeople where id = 250000;
+        // 250000 | Er        | Davion34 | 1958-01-02 | Rudolph_Block@yahoo.com
+        `
+				EXPLAIN
+				SELECT id, firstName, birthday, email FROM CompositePeople
+				WHERE firstName = 'Er'
+				AND lastName = 'Davion34'
+				AND birthday = '1958-01-02'
+				`,
+      );
+      const serverQueryTime = performance.now() - queryStart;
+
+      const out = { tag: "no-covering", time, serverQueryTime };
+      console.log(out);
+      return { ...out, rows };
+    }),
 });

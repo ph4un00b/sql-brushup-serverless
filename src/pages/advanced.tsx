@@ -35,6 +35,14 @@ export default function Indexes() {
     undefined,
     trpcOpts,
   );
+  const { data: coveringIndex } = api.advanced.coveringIndex.useQuery(
+    undefined,
+    trpcOpts,
+  );
+  const { data: noCovering } = api.advanced.noCovering.useQuery(
+    undefined,
+    trpcOpts,
+  );
 
   return (
     <div className="flex flex-col gap-4">
@@ -45,6 +53,8 @@ export default function Indexes() {
       <Tablita data={skipIndex} title="skip middle" />
       <Tablita data={avoidIndex} title="avoid index" />
       <Tablita data={explainRange} title="stop at first range" />
+      <Tablita data={coveringIndex} title="using covering index" />
+      <Tablita data={noCovering} title="not using covering index" />
     </div>
   );
 }
