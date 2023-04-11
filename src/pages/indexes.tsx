@@ -2,15 +2,41 @@ import { Metrics } from "~/components/metrics";
 import { Tablita } from "~/components/tablita";
 import { api } from "~/utils/api";
 
+const trpcOpts = {
+  enabled: true,
+  refetchOnWindowFocus: false,
+  refetchOnReconnect: false,
+  staleTime: Infinity,
+  cacheTime: Infinity,
+};
+
 export default function Indexes() {
-  // const { data: q100 } = api.indexes.q100.useQuery();
-  // const { data: q1k } = api.indexes.q1k.useQuery();
-  // const { data: q10k } = api.indexes.q10k.useQuery();
-  // const { data: q50k } = api.indexes.q50k.useQuery();
-  const { data: q500k } = api.indexes.q500k.useQuery();
-  const { data: q500kCuid } = api.indexes.q500kCuid.useQuery();
-  const { data: q500kIdx } = api.indexes.q500kIdx.useQuery();
-  const { data: q500kCuidIdx } = api.indexes.q500kCuidIdx.useQuery();
+  const { data: q500k } = api.indexes.q500k.useQuery(undefined, trpcOpts);
+  const { data: q500kCuid } = api.indexes.q500kCuid.useQuery(
+    undefined,
+    trpcOpts,
+  );
+  const { data: q500kIdx } = api.indexes.q500kIdx.useQuery(undefined, trpcOpts);
+  const { data: q500kCuidIdx } = api.indexes.q500kCuidIdx.useQuery(
+    undefined,
+    trpcOpts,
+  );
+  const { data: cuidPrefix6 } = api.indexes.cuidPrefix6.useQuery(
+    undefined,
+    trpcOpts,
+  );
+  const { data: cuidPrefix8 } = api.indexes.cuidPrefix8.useQuery(
+    undefined,
+    trpcOpts,
+  );
+  const { data: cuidPrefix9 } = api.indexes.cuidPrefix9.useQuery(
+    undefined,
+    trpcOpts,
+  );
+  const { data: cuidPrefix10 } = api.indexes.cuidPrefix10.useQuery(
+    undefined,
+    trpcOpts,
+  );
 
   // if (isLoading)
   // 	return <div>Fetching messages...</div>;
@@ -22,12 +48,10 @@ export default function Indexes() {
       <Tablita data={q500kIdx} title="500k idx names" />
       <Tablita data={q500kCuid} title="500k cuid names" />
       <Tablita data={q500kCuidIdx} title="500k cuid idx names" />
-      {
-        /* <Tablita show={false} data={q100} title="100 names" />
-      <Tablita show={false} data={q1k} title="1k names" />
-      <Tablita show={false} data={q10k} title="10k names" />
-      <Tablita data={q50k} title="50k names" /> */
-      }
+      <Tablita data={cuidPrefix6} title="test prefix 6" />
+      <Tablita data={cuidPrefix8} title="test prefix 8" />
+      <Tablita data={cuidPrefix9} title="test prefix 9, no index" />
+      <Tablita data={cuidPrefix10} title="test prefix 10" />
     </div>
   );
 }

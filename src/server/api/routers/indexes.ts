@@ -255,4 +255,108 @@ export const indexesRouter = createTRPCRouter({
       console.log(out);
       return { ...out, rows } as QData;
     }),
+  cuidPrefix6: publicProcedure
+    .query(async () => {
+      const queryStart = performance.now();
+      const conn = db.connection();
+
+      const { time, rows } = await conn.execute(
+        `
+				SELECT
+					COUNT(DISTINCT LEFT(name, 6)) / COUNT(*) as left6,
+					count(*) as total,
+					COUNT(DISTINCT LEFT(name, 6)) as cardinality
+				from TestNamesCuidIndexed
+				`,
+      );
+
+      const serverQueryTime = performance.now() - queryStart;
+
+      const out = {
+        tag: "cuid-prefix-6",
+        time,
+        serverQueryTime,
+        info: undefined,
+      };
+      console.log(out);
+      return { ...out, rows } as QData;
+    }),
+  cuidPrefix8: publicProcedure
+    .query(async () => {
+      const queryStart = performance.now();
+      const conn = db.connection();
+
+      const { time, rows } = await conn.execute(
+        `
+				SELECT
+					COUNT(DISTINCT LEFT(name, 8)) / COUNT(*) as left8,
+					count(*) as total,
+					COUNT(DISTINCT LEFT(name, 8)) as cardinality
+				from TestNamesCuidIndexed
+				`,
+      );
+
+      const serverQueryTime = performance.now() - queryStart;
+
+      const out = {
+        tag: "cuid-prefix-8",
+        time,
+        serverQueryTime,
+        info: undefined,
+      };
+      console.log(out);
+      return { ...out, rows } as QData;
+    }),
+  cuidPrefix9: publicProcedure
+    .query(async () => {
+      const queryStart = performance.now();
+      const conn = db.connection();
+
+      const { time, rows } = await conn.execute(
+        `
+				SELECT
+					COUNT(DISTINCT LEFT(name, 9)) / COUNT(*) as left9,
+					count(*) as total,
+					COUNT(DISTINCT LEFT(name, 9)) as cardinality
+				from TestNamesCuid
+				`,
+      );
+
+      const serverQueryTime = performance.now() - queryStart;
+
+      const out = {
+        tag: "cuid-prefix-9",
+        time,
+        serverQueryTime,
+        info: undefined,
+      };
+      console.log(out);
+      return { ...out, rows } as QData;
+    }),
+  cuidPrefix10: publicProcedure
+    .query(async () => {
+      const queryStart = performance.now();
+      const conn = db.connection();
+
+      const { time, rows } = await conn.execute(
+        `
+				SELECT
+					COUNT(DISTINCT LEFT(name, 10)) / COUNT(*) as left10,
+					count(*) as total,
+					COUNT(DISTINCT LEFT(name, 10)) as cardinality
+				from TestNamesCuidIndexed
+				`,
+      );
+
+      const serverQueryTime = performance.now() - queryStart;
+
+      const out = {
+        tag: "cuid-prefix-10",
+        time,
+        serverQueryTime,
+        info: undefined,
+      };
+      console.log(out);
+      return { ...out, rows } as QData;
+    }),
 });
