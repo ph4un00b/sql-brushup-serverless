@@ -35,4 +35,105 @@ export const advancedRouter = createTRPCRouter({
       console.log(out);
       return { ...out, rows };
     }),
+  partial: publicProcedure
+    .query(async () => {
+      const queryStart = performance.now();
+      const conn = db.connection();
+      const { rows, time } = await conn.execute(
+        // select * from CompositePeople where id = 250000;
+        // 250000 | Er        | Davion34 | 1958-01-02 | Rudolph_Block@yahoo.com
+        `
+				EXPLAIN
+				SELECT * FROM CompositePeople
+				WHERE firstName = 'Er'
+				AND lastName = 'Davion34'
+				`,
+      );
+      const serverQueryTime = performance.now() - queryStart;
+
+      const out = { tag: "first-index", time, serverQueryTime };
+      console.log(out);
+      return { ...out, rows };
+    }),
+  full: publicProcedure
+    .query(async () => {
+      const queryStart = performance.now();
+      const conn = db.connection();
+      const { rows, time } = await conn.execute(
+        // select * from CompositePeople where id = 250000;
+        // 250000 | Er        | Davion34 | 1958-01-02 | Rudolph_Block@yahoo.com
+        `
+				EXPLAIN
+				SELECT * FROM CompositePeople
+				WHERE firstName = 'Er'
+				AND lastName = 'Davion34'
+				AND birthday = '1958-01-02'
+				`,
+      );
+      const serverQueryTime = performance.now() - queryStart;
+
+      const out = { tag: "2-index", time, serverQueryTime };
+      console.log(out);
+      return { ...out, rows };
+    }),
+  skipIndex: publicProcedure
+    .query(async () => {
+      const queryStart = performance.now();
+      const conn = db.connection();
+      const { rows, time } = await conn.execute(
+        // select * from CompositePeople where id = 250000;
+        // 250000 | Er        | Davion34 | 1958-01-02 | Rudolph_Block@yahoo.com
+        `
+				EXPLAIN
+				SELECT * FROM CompositePeople
+				WHERE firstName = 'Er'
+				AND birthday = '1958-01-02'
+				`,
+      );
+      const serverQueryTime = performance.now() - queryStart;
+
+      const out = { tag: "skip", time, serverQueryTime };
+      console.log(out);
+      return { ...out, rows };
+    }),
+  avoidIndex: publicProcedure
+    .query(async () => {
+      const queryStart = performance.now();
+      const conn = db.connection();
+      const { rows, time } = await conn.execute(
+        // select * from CompositePeople where id = 250000;
+        // 250000 | Er        | Davion34 | 1958-01-02 | Rudolph_Block@yahoo.com
+        `
+				EXPLAIN
+				SELECT * FROM CompositePeople
+				WHERE lastName = 'Davion34'
+				`,
+      );
+      const serverQueryTime = performance.now() - queryStart;
+
+      const out = { tag: "avoid", time, serverQueryTime };
+      console.log(out);
+      return { ...out, rows };
+    }),
+  range: publicProcedure
+    .query(async () => {
+      const queryStart = performance.now();
+      const conn = db.connection();
+      const { rows, time } = await conn.execute(
+        // select * from CompositePeople where id = 250000;
+        // 250000 | Er        | Davion34 | 1958-01-02 | Rudolph_Block@yahoo.com
+        `
+				EXPLAIN
+				SELECT * FROM CompositePeople
+				WHERE firstName = 'Er'
+				AND lastName < 'Davion34'
+				AND birthday = '1958-01-02'
+				`,
+      );
+      const serverQueryTime = performance.now() - queryStart;
+
+      const out = { tag: "range", time, serverQueryTime };
+      console.log(out);
+      return { ...out, rows };
+    }),
 });
