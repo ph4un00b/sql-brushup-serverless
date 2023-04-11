@@ -11,7 +11,10 @@ const trpcOpts = {
 };
 
 export default function Indexes() {
-  const { data: indexTable } = api.advanced.indexTable.useQuery(null, trpcOpts);
+  const { data: indexTable } = api.advanced.indexTable.useQuery(
+    undefined,
+    trpcOpts,
+  );
 
   return (
     <div className="flex flex-col gap-4">
