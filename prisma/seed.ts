@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { CompositePeople, PrismaClient } from "@prisma/client";
 import { faker } from "@faker-js/faker";
 
 const prisma = new PrismaClient();
@@ -138,7 +138,36 @@ async function main() {
     await seedTestNamesCuidIdx(many);
     console.timeEnd("testNamesCuidIndexed-many-" + many);
   }
-  // console.log({ amir, betty });
+
+  /**
+   * composite index test
+   */
+  many = 10_000;
+  const compositePeople = await prisma.compositePeople.count();
+
+  if (compositePeople > 250_000) {
+    console.time("compositePeople" + 250_000);
+    console.log({ compositePeople });
+    console.timeEnd("compositePeople" + 250_000);
+  } else {
+    console.time("compositePeople" + many);
+    /**
+     * chunks of data
+     * PS throws error
+     * my guess: due to reaching data limits
+     * @todo research
+     */
+    await seedCompositePeople(many);
+    await seedCompositePeople(many);
+    await seedCompositePeople(many);
+    await seedCompositePeople(many);
+    await seedCompositePeople(many);
+    await seedCompositePeople(many);
+    await seedCompositePeople(many);
+    await seedCompositePeople(many);
+    await seedCompositePeople(many);
+    console.timeEnd("compositePeople" + many);
+  }
 }
 
 main()
@@ -150,6 +179,35 @@ main()
     await prisma.$disconnect();
     process.exit(1);
   });
+
+function createRandomUser(): Omit<CompositePeople, "id"> {
+  return {
+    firstName: faker.internet.userName().slice(0, 2 + Math.random() * 4),
+    lastName: faker.internet.userName(),
+    email: faker.internet.email(),
+    birthday: faker.date.birthdate(),
+  };
+}
+
+async function seedCompositePeople(many: number) {
+  const people = new Set<Omit<CompositePeople, "id">>();
+  console.time("generate-CompositePeople-" + many);
+  while (people.size < many) {
+    people.add(createRandomUser());
+  }
+  console.timeEnd("generate-CompositePeople-" + many);
+
+  console.time("spread-CompositePeople-" + many);
+  const namesArray = [...people];
+  console.timeEnd("spread-CompositePeople-" + many);
+
+  await prisma.compositePeople.createMany({
+    data: namesArray,
+    skipDuplicates: true,
+  });
+
+  console.log("Seeding completed!");
+}
 
 async function seedTestNames(many: number) {
   const names = new Set<string>();

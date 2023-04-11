@@ -17,6 +17,19 @@ datasource db {
   relationMode = "prisma"
 }
 
+model CompositePeople {
+  id        BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  firstName String   @db.VarChar(250)
+  lastName  String   @db.VarChar(250)
+  email     String   @db.VarChar(250)
+  birthday  DateTime @db.Date
+
+  @@index(fields: [firstName], name: "fn")
+  @@index(fields: [lastName], name: "ln")
+  @@index(fields: [birthday], name: "b")
+  @@index(fields: [firstName, lastName, birthday], name: "compuesto")
+}
+
 model TestNamesCuidIndexed {
   id   String @id @default(cuid())
   name String @db.VarChar(250)

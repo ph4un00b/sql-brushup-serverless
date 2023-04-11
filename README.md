@@ -1,28 +1,37 @@
-# Create T3 App
+testing serverless / sql stuff ftw! 🌌
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+## drivers
 
-## What's next? How do I make an app with this?
+- [x] mysql / planetscale
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+## orm
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+- [ ] prisma
+- [ ] drizzle
+- [x] raw / database-js
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+## common
 
-## Learn More
+- [x] test common joins query
+- [x] test virtual generated column
+- [x] test stored generated column
+- [x] test on duplicate update query
+- [x] test on duplicate ignore query
+- [x] test EXPLAIN query
+- [x] test access query CONST aka -> select * from table where id = 100
+- [x] test index with cuid id
+- [x] test index with auto_increment id
+- [x] test prefixed selectivity
+- [ ] test many2many index query
+- [ ] test many2many no-index query
+- [ ] test dummy FULL OUTER JOIN
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+## advanced
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
-
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
-
-## How do I deploy this?
-
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+- [ ] test composite index
+- [ ] test access query REF aka -> select * from table where col = 'some'
+- [ ] test access query FULLTEXT aka -> select * from table match(col) against
+      'some'
+- [ ] test access query RANGE aka -> select * from table where id < 100
+- [ ] test access query INDEX aka -> select col from table where index =! 'some'
+- [ ] test access query ALL aka -> select * from table where index =! 'some'

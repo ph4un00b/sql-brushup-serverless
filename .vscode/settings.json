@@ -1,15 +1,16 @@
 {
     "cSpell.words": [
-        "Authed",
-        "clsx",
-        "headlessui",
-        "Planetscale",
-        "pscale",
-        "refetches",
-        "Tablita",
-        "tailwindcss",
-        "trpc"
-    ],
+		"Authed",
+		"birthdate",
+		"clsx",
+		"headlessui",
+		"Planetscale",
+		"pscale",
+		"refetches",
+		"Tablita",
+		"tailwindcss",
+		"trpc"
+	],
     "workbench.colorCustomizations": {
         "activityBar.background": "#3C1471",
         "titleBar.activeBackground": "#541D9E",
