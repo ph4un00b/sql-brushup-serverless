@@ -15,7 +15,9 @@ type TablaProps = {
   data?: QData;
 };
 
+const SHOW_FOOTER = false;
 export function Tablita({ title, data, show = true }: TablaProps) {
+  if (!data) return <div>...loading</div>;
   return (
     <section className="overflow-x-auto">
       <H2>
@@ -62,14 +64,17 @@ export function Tablita({ title, data, show = true }: TablaProps) {
                 );
               })}
             </tbody>
-            <tfoot>
-              <tr>
-                {data?.rows && data.rows.length > 0 &&
-                  Object.keys(data?.rows?.[0] as unknown as string[]).map(
-                    (key) => <th key={key + "bottom"}>{key}</th>,
-                  )}
-              </tr>
-            </tfoot>
+            {SHOW_FOOTER &&
+              (
+                <tfoot>
+                  <tr>
+                    {data.rows && data.rows.length > 0 &&
+                      Object.keys(data?.rows?.[0] as unknown as string[]).map(
+                        (key) => <th key={key + "bottom"}>{key}</th>,
+                      )}
+                  </tr>
+                </tfoot>
+              )}
           </table>
         )
         : null}
