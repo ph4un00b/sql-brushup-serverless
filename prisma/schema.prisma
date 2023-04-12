@@ -2,11 +2,13 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextIndex", "fullTextSearch"]
 }
 
 datasource db {
-  provider     = "mysql"
+  provider = "mysql"
+
   // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.Text annotations in model Account below
   // Further reading:
   // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
@@ -23,11 +25,14 @@ model CompositePeople {
   lastName  String   @db.VarChar(250)
   email     String   @db.VarChar(250)
   birthday  DateTime @db.Date
+  bio       String   @db.VarChar(255)
 
+  @@index(fields: [email], name: "email")
   // @@index(fields: [firstName], name: "fn")
   // @@index(fields: [lastName], name: "ln")
   // @@index(fields: [birthday], name: "b")
   @@index(fields: [firstName, lastName, birthday], name: "compuesto")
+  @@fulltext(fields: [firstName, lastName, bio])
 }
 
 model TestNamesCuidIndexed {

@@ -43,6 +43,14 @@ export default function Indexes() {
     undefined,
     trpcOpts,
   );
+  const { data: wildcard } = api.advanced.wildcard.useQuery(
+    undefined,
+    trpcOpts,
+  );
+  const { data: noWildcard } = api.advanced.noWildcard.useQuery(
+    undefined,
+    trpcOpts,
+  );
 
   return (
     <div className="flex flex-col gap-4">
@@ -55,6 +63,8 @@ export default function Indexes() {
       <Tablita data={explainRange} title="stop at first range" />
       <Tablita data={coveringIndex} title="using covering index" />
       <Tablita data={noCovering} title="not using covering index" />
+      <Tablita data={wildcard} title="wildcard search" />
+      <Tablita data={noWildcard} title="no indexed wildcard search" />
     </div>
   );
 }

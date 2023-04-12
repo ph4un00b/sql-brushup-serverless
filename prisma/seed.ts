@@ -166,6 +166,25 @@ async function main() {
     await seedCompositePeople(many);
     await seedCompositePeople(many);
     await seedCompositePeople(many);
+    await seedCompositePeople(many);
+    await seedCompositePeople(many);
+    await seedCompositePeople(many);
+    await seedCompositePeople(many);
+    await seedCompositePeople(many);
+    await seedCompositePeople(many);
+    await seedCompositePeople(many);
+    await seedCompositePeople(many);
+    await seedCompositePeople(many);
+
+    await seedCompositePeople(many);
+    await seedCompositePeople(many);
+    await seedCompositePeople(many);
+    await seedCompositePeople(many);
+    await seedCompositePeople(many);
+    await seedCompositePeople(many);
+    await seedCompositePeople(many);
+    await seedCompositePeople(many);
+    await seedCompositePeople(many);
     console.timeEnd("compositePeople" + many);
   }
 }
@@ -183,9 +202,10 @@ main()
 function createRandomUser(): Omit<CompositePeople, "id"> {
   return {
     firstName: faker.internet.userName().slice(0, 2 + Math.random() * 4),
-    lastName: faker.internet.userName(),
+    lastName: faker.name.lastName(),
     email: faker.internet.email(),
     birthday: faker.date.birthdate(),
+    bio: faker.lorem.sentence(),
   };
 }
 

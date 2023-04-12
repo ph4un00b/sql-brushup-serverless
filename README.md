@@ -6,15 +6,15 @@ testing serverless / sql stuff ftw! 🌌
 
 ## orm
 
-- [ ] prisma
+- [x] prisma / schema
 - [ ] drizzle
-- [x] raw / database-js
+- [x] database-js / raw
 
 ## common
 
 - [x] test common joins query
-- [x] test virtual generated column
-- [x] test stored generated column
+- [x] test virtual generated column (raw only)
+- [x] test stored generated column (raw only)
 - [x] test on duplicate update query
 - [x] test on duplicate ignore query
 - [x] test EXPLAIN query
@@ -28,10 +28,14 @@ testing serverless / sql stuff ftw! 🌌
 
 ## advanced
 
-- [ ] test composite index
-- [ ] test access query REF aka -> select * from table where col = 'some'
-- [ ] test access query FULLTEXT aka -> select * from table match(col) against
+- [x] test composite index
+- [x] test covering index
+- [ ] test function-based index (raw only)
+- [ ] test json-based index (raw only)
+- [*] test wildcard index
+- [ ] test derived data instead of a wildcard (raw only)
+
+## full-text
+
+- [ ] test access query FULL-TEXT aka -> select * from table match(col) against
       'some'
-- [ ] test access query RANGE aka -> select * from table where id < 100
-- [ ] test access query INDEX aka -> select col from table where index =! 'some'
-- [ ] test access query ALL aka -> select * from table where index =! 'some'

@@ -41,12 +41,12 @@ export const advancedRouter = createTRPCRouter({
       const conn = db.connection();
       const { rows, time } = await conn.execute(
         // select * from CompositePeople where id = 250000;
-        // 250000 | Er        | Davion34 | 1958-01-02 | Rudolph_Block@yahoo.com
+        //  250000 | Ari       | Bernhard | Colten_Collins@gmail.com | 1991-11-16 | Ipsam possimus doloremque ducimus atque aut vitae.
         `
 				EXPLAIN
 				SELECT * FROM CompositePeople
-				WHERE firstName = 'Er'
-				AND lastName = 'Davion34'
+				WHERE firstName = 'Ari'
+				AND lastName = 'Bernhard'
 				`,
       );
       const serverQueryTime = performance.now() - queryStart;
@@ -61,13 +61,13 @@ export const advancedRouter = createTRPCRouter({
       const conn = db.connection();
       const { rows, time } = await conn.execute(
         // select * from CompositePeople where id = 250000;
-        // 250000 | Er        | Davion34 | 1958-01-02 | Rudolph_Block@yahoo.com
+        //  250000 | Ari       | Bernhard | Colten_Collins@gmail.com | 1991-11-16 | Ipsam possimus doloremque ducimus atque aut vitae.
         `
 				EXPLAIN
 				SELECT * FROM CompositePeople
-				WHERE firstName = 'Er'
-				AND lastName = 'Davion34'
-				AND birthday = '1958-01-02'
+				WHERE firstName = 'Ari'
+				AND lastName = 'Bernhard'
+				AND birthday = '1991-11-16'
 				`,
       );
       const serverQueryTime = performance.now() - queryStart;
@@ -82,12 +82,12 @@ export const advancedRouter = createTRPCRouter({
       const conn = db.connection();
       const { rows, time } = await conn.execute(
         // select * from CompositePeople where id = 250000;
-        // 250000 | Er        | Davion34 | 1958-01-02 | Rudolph_Block@yahoo.com
+        //  250000 | Ari       | Bernhard | Colten_Collins@gmail.com | 1991-11-16 | Ipsam possimus doloremque ducimus atque aut vitae.
         `
 				EXPLAIN
 				SELECT * FROM CompositePeople
-				WHERE firstName = 'Er'
-				AND birthday = '1958-01-02'
+				WHERE firstName = 'Ari'
+				AND birthday = '1991-11-16'
 				`,
       );
       const serverQueryTime = performance.now() - queryStart;
@@ -102,11 +102,11 @@ export const advancedRouter = createTRPCRouter({
       const conn = db.connection();
       const { rows, time } = await conn.execute(
         // select * from CompositePeople where id = 250000;
-        // 250000 | Er        | Davion34 | 1958-01-02 | Rudolph_Block@yahoo.com
+        //  250000 | Ari       | Bernhard | Colten_Collins@gmail.com | 1991-11-16 | Ipsam possimus doloremque ducimus atque aut vitae.
         `
 				EXPLAIN
 				SELECT * FROM CompositePeople
-				WHERE lastName = 'Davion34'
+				WHERE lastName = 'Bernhard'
 				`,
       );
       const serverQueryTime = performance.now() - queryStart;
@@ -121,13 +121,13 @@ export const advancedRouter = createTRPCRouter({
       const conn = db.connection();
       const { rows, time } = await conn.execute(
         // select * from CompositePeople where id = 250000;
-        // 250000 | Er        | Davion34 | 1958-01-02 | Rudolph_Block@yahoo.com
+        //  250000 | Ari       | Bernhard | Colten_Collins@gmail.com | 1991-11-16 | Ipsam possimus doloremque ducimus atque aut vitae.
         `
 				EXPLAIN
 				SELECT * FROM CompositePeople
-				WHERE firstName = 'Er'
-				AND lastName < 'Davion34'
-				AND birthday = '1958-01-02'
+				WHERE firstName = 'Ari'
+				AND lastName < 'Bernhard'
+				AND birthday = '1991-11-16'
 				`,
       );
       const serverQueryTime = performance.now() - queryStart;
@@ -154,13 +154,13 @@ export const advancedRouter = createTRPCRouter({
       const conn = db.connection();
       const { rows, time } = await conn.execute(
         // select * from CompositePeople where id = 250000;
-        // 250000 | Er        | Davion34 | 1958-01-02 | Rudolph_Block@yahoo.com
+        //  250000 | Ari       | Bernhard | Colten_Collins@gmail.com | 1991-11-16 | Ipsam possimus doloremque ducimus atque aut vitae.
         `
 				EXPLAIN
 				SELECT id, firstName, birthday FROM CompositePeople
-				WHERE firstName = 'Er'
-				AND lastName = 'Davion34'
-				AND birthday = '1958-01-02'
+				WHERE firstName = 'Ari'
+				AND lastName = 'Bernhard'
+				AND birthday = '1991-11-16'
 				`,
       );
       const serverQueryTime = performance.now() - queryStart;
@@ -175,18 +175,56 @@ export const advancedRouter = createTRPCRouter({
       const conn = db.connection();
       const { rows, time } = await conn.execute(
         // select * from CompositePeople where id = 250000;
-        // 250000 | Er        | Davion34 | 1958-01-02 | Rudolph_Block@yahoo.com
+        //  250000 | Ari       | Bernhard | Colten_Collins@gmail.com | 1991-11-16 | Ipsam possimus doloremque ducimus atque aut vitae.
         `
 				EXPLAIN
 				SELECT id, firstName, birthday, email FROM CompositePeople
-				WHERE firstName = 'Er'
-				AND lastName = 'Davion34'
-				AND birthday = '1958-01-02'
+				WHERE firstName = 'Ari'
+				AND lastName = 'Bernhard'
+				AND birthday = '1991-11-16'
 				`,
       );
       const serverQueryTime = performance.now() - queryStart;
 
       const out = { tag: "no-covering", time, serverQueryTime };
+      console.log(out);
+      return { ...out, rows };
+    }),
+  wildcard: publicProcedure
+    .query(async () => {
+      const queryStart = performance.now();
+      const conn = db.connection();
+      const { rows, time } = await conn.execute(
+        // select * from CompositePeople where id = 250000;
+        //  250000 | Ari       | Bernhard | Colten_Collins@gmail.com | 1991-11-16 | Ipsam possimus doloremque ducimus atque aut vitae.
+        `
+				EXPLAIN
+				SELECT * FROM CompositePeople
+				WHERE email like 'Colten%'
+				`,
+      );
+      const serverQueryTime = performance.now() - queryStart;
+
+      const out = { tag: "wildcard", time, serverQueryTime };
+      console.log(out);
+      return { ...out, rows };
+    }),
+  noWildcard: publicProcedure
+    .query(async () => {
+      const queryStart = performance.now();
+      const conn = db.connection();
+      const { rows, time } = await conn.execute(
+        // select * from CompositePeople where id = 250000;
+        //  250000 | Ari       | Bernhard | Colten_Collins@gmail.com | 1991-11-16 | Ipsam possimus doloremque ducimus atque aut vitae.
+        `
+				EXPLAIN
+				SELECT * FROM CompositePeople
+				WHERE email like '%gmail%'
+				`,
+      );
+      const serverQueryTime = performance.now() - queryStart;
+
+      const out = { tag: "surrounded-wildcard", time, serverQueryTime };
       console.log(out);
       return { ...out, rows };
     }),
