@@ -3,6 +3,7 @@ import { createTRPCRouter } from "~/server/api/trpc";
 import { innerJoinRouter } from "~/server/api/routers/join";
 import { indexesRouter } from "./routers/indexes";
 import { advancedRouter } from "./routers/advanced";
+import { issuesRouter } from "./routers/issues";
 
 /**
  * This is the primary router for your server.
@@ -12,6 +13,7 @@ import { advancedRouter } from "./routers/advanced";
 export const appRouter = createTRPCRouter({
   innerJoin: innerJoinRouter,
   indexes: indexesRouter,
+  issues: issuesRouter,
   advanced: advancedRouter,
   guestbook: guestbookRouter,
 });
