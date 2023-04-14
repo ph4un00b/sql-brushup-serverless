@@ -28,6 +28,10 @@ export default function React() {
     undefined,
     trpcOpts,
   );
+  const { data: historyUnique } = api.issues.historyUnique.useQuery(
+    undefined,
+    trpcOpts,
+  );
   return (
     <div className="flex flex-col gap-4">
       <Metrics />
@@ -36,10 +40,35 @@ export default function React() {
         data={historySafe}
         title="history composite primary key solution"
       />
+      <Tablita
+        data={historyUnique}
+        title="history composite unique solution"
+      />
       <ReactIssue />
       <CompositePk />
+      <CompositeUnique />
     </div>
   );
+}
+
+function CompositeUnique() {
+  const utils = api.useContext();
+
+  const addHistoryUnique = api.issues.addHistoryUnique.useMutation({
+    ...trpcOpts,
+    onSuccess() {
+      utils.issues.historyUnique.invalidate();
+    },
+  });
+
+  useEffect(() => {
+    addHistoryUnique.mutate({
+      ...user,
+      ...product,
+    });
+  }, []);
+
+  return <></>;
 }
 
 function CompositePk() {
@@ -48,7 +77,7 @@ function CompositePk() {
   const addHistorySafe = api.issues.addHistorySafe.useMutation({
     ...trpcOpts,
     onSuccess() {
-      utils.issues.history.invalidate();
+      utils.issues.historySafe.invalidate();
     },
   });
 
