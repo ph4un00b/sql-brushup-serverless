@@ -4,6 +4,7 @@
 		"birthdate",
 		"clsx",
 		"headlessui",
+		"Kysely",
 		"Planetscale",
 		"pscale",
 		"refetches",

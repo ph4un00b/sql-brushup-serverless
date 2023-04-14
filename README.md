@@ -1,14 +1,23 @@
 testing serverless / sql stuff ftw! 🌌
 
+## ui
+
+- [ ] table
+
 ## drivers
 
 - [x] mysql / planetscale
 
+## schema
+
+- [ ] prisma
+
 ## orm
 
-- [x] prisma / schema
-- [ ] drizzle
 - [x] database-js / raw
+- [ ] prisma
+- [ ] drizzle
+- [ ] Kysely
 
 ## common
 
