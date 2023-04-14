@@ -22,6 +22,46 @@ const product = {
   product: faker.commerce.productName(),
 };
 
+export default function React() {
+  const { data: history } = api.issues.history.useQuery(undefined, trpcOpts);
+  const { data: historySafe } = api.issues.historySafe.useQuery(
+    undefined,
+    trpcOpts,
+  );
+  return (
+    <div className="flex flex-col gap-4">
+      <Metrics />
+      <Tablita data={history} title="history double issue" />
+      <Tablita
+        data={historySafe}
+        title="history composite primary key solution"
+      />
+      <ReactIssue />
+      <CompositePk />
+    </div>
+  );
+}
+
+function CompositePk() {
+  const utils = api.useContext();
+
+  const addHistorySafe = api.issues.addHistorySafe.useMutation({
+    ...trpcOpts,
+    onSuccess() {
+      utils.issues.history.invalidate();
+    },
+  });
+
+  useEffect(() => {
+    addHistorySafe.mutate({
+      ...user,
+      ...product,
+    });
+  }, []);
+
+  return <></>;
+}
+
 function ReactIssue() {
   const utils = api.useContext();
 
@@ -40,15 +80,4 @@ function ReactIssue() {
   }, []);
 
   return <></>;
-}
-
-export default function React() {
-  const { data: history } = api.issues.history.useQuery(undefined, trpcOpts);
-  return (
-    <div className="flex flex-col gap-4">
-      <Metrics />
-      <Tablita data={history} title="history double issue" />
-      <ReactIssue />
-    </div>
-  );
 }

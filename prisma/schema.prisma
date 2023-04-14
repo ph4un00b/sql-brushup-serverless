@@ -19,6 +19,17 @@ datasource db {
   relationMode = "prisma"
 }
 
+model HistoryCompositePK {
+  userId      String    @db.VarChar(255)
+  username    String    @db.VarChar(255)
+  productId   String    @db.VarChar(255)
+  productName String    @db.VarChar(255)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime?
+
+  @@id([userId, productId])
+}
+
 model HistoryIssue {
   id          BigInt @id @default(autoincrement()) @db.UnsignedBigInt
   userId      String @db.VarChar(255)

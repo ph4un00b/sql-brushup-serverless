@@ -50,4 +50,45 @@ export const issuesRouter = createTRPCRouter({
       );
       return { data: "ok" };
     }),
+  historySafe: publicProcedure
+    .query(async () => {
+      const queryStart = performance.now();
+      const conn = db.connection();
+      const { rows, time } = await conn.execute(`
+				SELECT * from HistoryCompositePK
+				order by createdAt
+				desc limit 6
+				`);
+      const serverQueryTime = performance.now() - queryStart;
+      const out = { tag: "history-safe", time, serverQueryTime };
+      console.log(out);
+      return { ...out, rows };
+    }),
+  addHistorySafe: publicProcedure
+    .input(z.object({
+      userId: z.string().uuid(),
+      username: z.string(),
+      productId: z.string().uuid(),
+      product: z.string(),
+    }))
+    .mutation(async (opts) => {
+      const { input } = opts;
+      const { userId, username, productId, product } = input;
+      const conn = db.connection();
+
+      try {
+        await conn.execute(
+          `
+				INSERT INTO
+				HistoryCompositePK (userId, username, productId, productName)
+					VALUES (?, ?, ?, ?);
+				`,
+          [userId, username, productId, product],
+        );
+      } catch (error) {
+        console.log(">>history-safe pos me como el errosito fome (●'◡'●)");
+      }
+
+      return { data: "ok" };
+    }),
 });
