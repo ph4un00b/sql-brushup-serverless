@@ -228,4 +228,68 @@ export const advancedRouter = createTRPCRouter({
       console.log(out);
       return { ...out, rows };
     }),
+  fulltext: publicProcedure
+    .query(async () => {
+      const queryStart = performance.now();
+      const conn = db.connection();
+      const { rows, time } = await conn.execute(
+        `
+				EXPLAIN
+				SELECT * FROM CompositePeople
+				WHERE
+					MATCH(firstName, lastName, bio)
+					AGAINST ('fau' IN NATURAL LANGUAGE MODE)
+				`,
+      );
+      const serverQueryTime = performance.now() - queryStart;
+
+      const out = { tag: "match-ft", time, serverQueryTime };
+      console.log(out);
+      return { ...out, rows };
+    }),
+  /**
+   * @see https://dev.mysql.com/doc/refman/8.0/en/fulltext-boolean.html
+   *
+   * + stands for AND
+   * - stands for NOT
+   * [no operator] implies OR
+   */
+  booleanMode: publicProcedure
+    .query(async () => {
+      const queryStart = performance.now();
+      const conn = db.connection();
+      const { rows, time } = await conn.execute(
+        `
+				EXPLAIN
+				SELECT * FROM CompositePeople
+				WHERE
+					MATCH(firstName, lastName, bio)
+					AGAINST ('+fau +Pfannerstill' IN BOOLEAN MODE)
+				`,
+      );
+      const serverQueryTime = performance.now() - queryStart;
+
+      const out = { tag: "boolean-ft", time, serverQueryTime };
+      console.log(out);
+      return { ...out, rows };
+    }),
+  booleanModeLess: publicProcedure
+    .query(async () => {
+      const queryStart = performance.now();
+      const conn = db.connection();
+      const { rows, time } = await conn.execute(
+        `
+				EXPLAIN
+				SELECT * FROM CompositePeople
+				WHERE
+					MATCH(firstName, lastName, bio)
+					AGAINST ('+fau -Pfannerstill' IN BOOLEAN MODE)
+				`,
+      );
+      const serverQueryTime = performance.now() - queryStart;
+
+      const out = { tag: "boolean-less", time, serverQueryTime };
+      console.log(out);
+      return { ...out, rows };
+    }),
 });

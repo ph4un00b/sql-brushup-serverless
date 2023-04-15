@@ -1,5 +1,6 @@
 import { Metrics } from "~/components/metrics";
 import { Tablita } from "~/components/tablita";
+import { H2 } from "~/components/ui/typography";
 import { api } from "~/utils/api";
 
 const trpcOpts = {
@@ -51,10 +52,19 @@ export default function Indexes() {
     undefined,
     trpcOpts,
   );
+  const { data: fulltext } = api.advanced.fulltext.useQuery(
+    undefined,
+    trpcOpts,
+  );
+  const { data: booleanModeLess } = api.advanced.booleanModeLess.useQuery(
+    undefined,
+    trpcOpts,
+  );
 
   return (
     <div className="flex flex-col gap-4">
       <Metrics />
+      <H2>reseed if unseeded! 🔧</H2>
       <Tablita data={indexTable} title="show indexes" />
       <Tablita data={explainQuery} title="explain first index" />
       <Tablita data={explainQuery2} title="explain 2 indexes" />
@@ -65,6 +75,8 @@ export default function Indexes() {
       <Tablita data={noCovering} title="not using covering index" />
       <Tablita data={wildcard} title="wildcard search" />
       <Tablita data={noWildcard} title="no indexed wildcard search" />
+      <Tablita data={fulltext} title="fulltext search 💖" />
+      <Tablita data={booleanModeLess} title="boolean search 💖" />
     </div>
   );
 }
