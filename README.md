@@ -46,5 +46,5 @@ testing serverless / sql stuff ftw! 🌌
 
 ## full-text
 
-- [ ] test access query FULL-TEXT aka -> select * from table match(col) against
-      'some'
+- [x] test access query FULL-TEXT aka -> select * from table match(col) against
+- [x] test access query FULL-TEXT in Boolean mode

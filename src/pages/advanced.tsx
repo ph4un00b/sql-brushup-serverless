@@ -60,6 +60,10 @@ export default function Indexes() {
     undefined,
     trpcOpts,
   );
+  const { data: duplicatedIdx } = api.advanced.duplicatedIdx.useQuery(
+    undefined,
+    trpcOpts,
+  );
 
   return (
     <div className="flex flex-col gap-4">
@@ -77,6 +81,7 @@ export default function Indexes() {
       <Tablita data={noWildcard} title="no indexed wildcard search" />
       <Tablita data={fulltext} title="fulltext search 💖" />
       <Tablita data={booleanModeLess} title="boolean search 💖" />
+      <Tablita data={duplicatedIdx} title="duplicated index issue" />
     </div>
   );
 }

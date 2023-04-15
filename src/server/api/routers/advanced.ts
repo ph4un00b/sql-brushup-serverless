@@ -292,4 +292,30 @@ export const advancedRouter = createTRPCRouter({
       console.log(out);
       return { ...out, rows };
     }),
+  /**
+   * will use composite index plus
+   * primary index will be on the right side
+   * (index on column_1_name, column_2_name, column_3_name, and id)
+   * hence
+   * it will manually sort by id
+   * keep a duplicated index on firstName only for better performance
+   */
+  duplicatedIdx: publicProcedure
+    .query(async () => {
+      const queryStart = performance.now();
+      const conn = db.connection();
+      const { rows, time } = await conn.execute(
+        `
+				EXPLAIN
+				SELECT * FROM CompositePeople
+				WHERE firstName = 'fau'
+				ORDER BY id DESC;
+				`,
+      );
+      const serverQueryTime = performance.now() - queryStart;
+
+      const out = { tag: "duplicated", time, serverQueryTime };
+      console.log(out);
+      return { ...out, rows };
+    }),
 });
