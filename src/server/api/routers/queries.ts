@@ -102,4 +102,70 @@ export const queriesRouter = createTRPCRouter({
       console.log(out);
       return { ...out, rows };
     }),
+  suboptimal: publicProcedure
+    .query(async () => {
+      const queryStart = performance.now();
+      const conn = db.connection();
+      const { rows, time } = await conn.execute(
+        `
+				explain select *
+					from RandomTable
+				where
+					ADDTIME(dueDate, dueTime) between now()
+				and
+					now() + interval 2 day
+				`,
+      );
+      const serverQueryTime = performance.now() - queryStart;
+
+      const out = { tag: "suboptimal", time, serverQueryTime };
+      console.log(out);
+      return { ...out, rows };
+    }),
+  optimal: publicProcedure
+    .query(async () => {
+      const queryStart = performance.now();
+      const conn = db.connection();
+      const { rows, time } = await conn.execute(
+        `
+				explain select *
+				 from RandomTable
+				where
+					dueDate between current_date
+				and
+				 	current_date + interval 2 day
+				`,
+      );
+      const serverQueryTime = performance.now() - queryStart;
+
+      const out = { tag: "optimal", time, serverQueryTime };
+      console.log(out);
+      return { ...out, rows };
+    }),
+  redundant: publicProcedure
+    .query(async () => {
+      const queryStart = performance.now();
+      const conn = db.connection();
+      const { rows, time } = await conn.execute(
+        `
+				explain select *
+				 from RandomTable
+				where
+					ADDTIME(dueDate, dueTime) between now()
+				and
+					now() + interval 2 day
+				-- using redundant data with false positives then narrow it
+				-- in order to get all positive data
+				AND
+					dueDate between current_date
+				and
+				 	current_date + interval 2 day
+				`,
+      );
+      const serverQueryTime = performance.now() - queryStart;
+
+      const out = { tag: "redundant", time, serverQueryTime };
+      console.log(out);
+      return { ...out, rows };
+    }),
 });

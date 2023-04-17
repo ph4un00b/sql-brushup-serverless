@@ -1,11 +1,17 @@
-import { CompositePeople, PrismaClient } from "@prisma/client";
+import { CompositePeople, PrismaClient, RandomTable } from "@prisma/client";
 import { faker } from "@faker-js/faker";
 
 const prisma = new PrismaClient();
 async function main() {
   const forRandomTable = [];
-  for (let i = 1; i <= 12; i++) {
-    forRandomTable.push({ size: 1000 + Math.floor(Math.random() * 30_000) });
+  for (let i = 1; i <= 20; i++) {
+    const datum: Omit<RandomTable, "id"> = {
+      size: 1000 + Math.floor(Math.random() * 30_000),
+      title: faker.hacker.phrase(),
+      dueDate: Math.random() > 0.5 ? faker.date.soon(10) : new Date(),
+      dueTime: faker.date.soon(10),
+    };
+    forRandomTable.push(datum);
   }
   console.log({ forRandomTable });
   await prisma.randomTable.createMany({

@@ -20,10 +20,14 @@ datasource db {
 }
 
 model RandomTable {
-  id   BigInt @id @default(autoincrement()) @db.UnsignedBigInt
-  size Int    @db.UnsignedSmallInt
+  id      BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  size    Int      @db.UnsignedSmallInt
+  title   String   @db.VarChar(100)
+  dueDate DateTime @db.Date
+  dueTime DateTime @db.Time
 
-  @@index([size])
+  @@index(fields: [size], name: "size")
+  @@index(fields: [dueDate], name: "due_date")
 }
 
 model HistoryCompositeUnique {

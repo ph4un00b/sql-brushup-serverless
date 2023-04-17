@@ -32,6 +32,18 @@ export default function Indexes() {
     undefined,
     trpcOpts,
   );
+  const { data: suboptimal } = api.queries.suboptimal.useQuery(
+    undefined,
+    trpcOpts,
+  );
+  const { data: optimal } = api.queries.optimal.useQuery(
+    undefined,
+    trpcOpts,
+  );
+  const { data: redundant } = api.queries.redundant.useQuery(
+    undefined,
+    trpcOpts,
+  );
 
   return (
     <div className="flex flex-col gap-4">
@@ -47,6 +59,18 @@ export default function Indexes() {
       <Tablita
         data={deobfuscated}
         title="deobfuscated using range type (better)!"
+      />
+      <Tablita
+        data={suboptimal}
+        title="exact set + suboptimal query 😒!"
+      />
+      <Tablita
+        data={optimal}
+        title="approximated set + optimal query 😒!"
+      />
+      <Tablita
+        data={redundant}
+        title="exact set + optimal query 😍!"
       />
     </div>
   );
