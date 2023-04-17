@@ -2,7 +2,7 @@ import { Metrics } from "~/components/metrics";
 import { Tablita } from "~/components/tablita";
 import { api } from "~/utils/api";
 
-export default function Sqlito() {
+export default function Basics() {
   const { data: join } = api.innerJoin.join.useQuery();
   const { data: joinOn } = api.innerJoin.joinOn.useQuery();
   const { data: joinOnWhere } = api.innerJoin.joinOnWhere.useQuery();

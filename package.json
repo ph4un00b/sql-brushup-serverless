@@ -3,6 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+		"****************************": "db",
+		"push": "prisma db push",
+		"seed": "prisma db seed",
+		"flux": "pscale shell flux-database dev",
+		"*****************************": "next",
     "build": "next build",
     "dev": "next dev",
     "postinstall": "prisma generate",
