@@ -19,6 +19,13 @@ datasource db {
   relationMode = "prisma"
 }
 
+model RandomTable {
+  id   BigInt @id @default(autoincrement()) @db.UnsignedBigInt
+  size Int    @db.UnsignedSmallInt
+
+  @@index([size])
+}
+
 model HistoryCompositeUnique {
   id          BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
   userId      String    @db.VarChar(255)

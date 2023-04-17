@@ -3,6 +3,15 @@ import { faker } from "@faker-js/faker";
 
 const prisma = new PrismaClient();
 async function main() {
+  const forRandomTable = [];
+  for (let i = 1; i <= 12; i++) {
+    forRandomTable.push({ size: 1000 + Math.floor(Math.random() * 30_000) });
+  }
+  console.log({ forRandomTable });
+  await prisma.randomTable.createMany({
+    data: forRandomTable,
+  });
+
   // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
   await prisma.vaccination.upsert({
     where: { cat_name: "Ms. Fluff" },
