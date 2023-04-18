@@ -68,6 +68,10 @@ export default function Indexes() {
     undefined,
     trpcOpts,
   );
+  const { data: union } = api.queries.union.useQuery(
+    undefined,
+    trpcOpts,
+  );
 
   return (
     <div className="flex flex-col gap-4">
@@ -119,6 +123,10 @@ export default function Indexes() {
       <Tablita
         data={recursiveCTE}
         title="recursive CTE 😍!"
+      />
+      <Tablita
+        data={union}
+        title="union!"
       />
     </div>
   );

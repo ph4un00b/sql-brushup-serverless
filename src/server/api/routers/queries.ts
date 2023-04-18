@@ -330,4 +330,28 @@ export const queriesRouter = createTRPCRouter({
       // console.log(out);
       // return { ...out, rows };
     }),
+  union: publicProcedure
+    .query(async () => {
+      const queryStart = performance.now();
+      const conn = db.connection();
+      const { rows, time } = await conn.execute(
+        `
+					SELECT 1
+					UNION
+					SELECT 2
+					UNION
+					SELECT 3
+					UNION ALL
+					SELECT 3
+					UNION ALL
+					SELECT 3
+				`,
+      );
+
+      const serverQueryTime = performance.now() - queryStart;
+
+      const out = { tag: "union", time, serverQueryTime };
+      console.log(out);
+      return { ...out, rows };
+    }),
 });
