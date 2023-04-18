@@ -64,6 +64,10 @@ export default function Indexes() {
     undefined,
     trpcOpts,
   );
+  const { data: recursiveCTE } = api.queries.recursiveCTE.useQuery(
+    undefined,
+    trpcOpts,
+  );
 
   return (
     <div className="flex flex-col gap-4">
@@ -111,6 +115,10 @@ export default function Indexes() {
       <Tablita
         data={cte}
         title="cte 😍!"
+      />
+      <Tablita
+        data={recursiveCTE}
+        title="recursive CTE 😍!"
       />
     </div>
   );

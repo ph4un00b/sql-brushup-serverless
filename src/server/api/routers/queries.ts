@@ -302,4 +302,32 @@ export const queriesRouter = createTRPCRouter({
       // console.log(out);
       // return { ...out, rows };
     }),
+  recursiveCTE: publicProcedure
+    .query(async () => {
+      const queryStart = performance.now();
+      const conn = db.connection();
+      try {
+        const { rows, time } = await conn.execute(
+          `
+					WITH RECURSIVE all_dates AS (
+						SELECT '2023-01-01' AS dt -- Initial Condition
+						UNION ALL
+						SELECT dt + INTERVAL 1 DAY FROM all_dates WHERE dt < '2023-12-31' -- Recursive Condition
+					)
+					SELECT * FROM all_dates;
+				`,
+        );
+      } catch (error) {
+        const serverQueryTime = performance.now() - queryStart;
+        const out = { tag: "recursive-cte", serverQueryTime };
+        console.log(out);
+        return { ...out, rows: [{ "not-suported": "😒 planetscale" }] };
+      }
+
+      // const serverQueryTime = performance.now() - queryStart;
+
+      // const out = { tag: "subquery-cool", time, serverQueryTime };
+      // console.log(out);
+      // return { ...out, rows };
+    }),
 });
