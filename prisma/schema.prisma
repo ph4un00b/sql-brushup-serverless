@@ -19,6 +19,12 @@ datasource db {
   relationMode = "prisma"
 }
 
+model OrderTest {
+  id         BigInt  @id @default(autoincrement()) @db.UnsignedBigInt
+  customerId BigInt
+  total      Decimal @db.Decimal(10, 2)
+}
+
 model JoinBad {
   // id             BigInt          @id @default(autoincrement()) @db.UnsignedBigInt
   company        CompanyTable    @relation(fields: [companyTableId], references: [id])

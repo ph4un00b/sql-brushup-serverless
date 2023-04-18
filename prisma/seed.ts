@@ -2,6 +2,8 @@ import {
   CompanyTable,
   CompositePeople,
   JoinBad,
+  OrderTest,
+  Prisma,
   PrismaClient,
   RandomTable,
 } from "@prisma/client";
@@ -15,39 +17,6 @@ async function main() {
    * up to 10k for 1k reseeds!
    * up to 1k for 10k reseeds!
    */
-
-  const forCompany = [];
-  for (let i = 1; i <= 20; i++) {
-    const datum: Omit<CompanyTable, "id"> = {
-      name: faker.company.name(),
-    };
-    forCompany.push(datum);
-  }
-  console.log({ forCompany });
-  await prisma.companyTable.createMany({
-    data: forCompany,
-    skipDuplicates: true,
-  });
-
-  const countCompositeNames = await prisma.compositePeople.count();
-  const countCompanyNames = await prisma.companyTable.count();
-
-  const forJoinTable = [];
-  for (let i = 1; i <= 1_500; i++) {
-    const datum = {
-      companyTableId: BigInt(1 + Math.floor(Math.random() * countCompanyNames)),
-      peopleId: BigInt(1 + Math.floor(Math.random() * countCompositeNames)),
-    };
-    forJoinTable.push(datum);
-  }
-
-  // console.log({ forJoinTable });
-  await prisma.joinBad.createMany({
-    data: forJoinTable,
-  });
-  await prisma.joinCool.createMany({
-    data: forJoinTable,
-  });
 
   const forRandomTable = [];
   for (let i = 1; i <= 20; i++) {
@@ -248,6 +217,53 @@ async function main() {
     await seedCompositePeople(many);
     console.timeEnd("compositePeople" + many);
   }
+
+  const countCompositeNames = await prisma.compositePeople.count();
+
+  const forOrders = [];
+  for (let i = 1; i <= 200; i++) {
+    const datum: Omit<OrderTest, "id"> = {
+      customerId: BigInt(1 + Math.floor(Math.random() * countCompositeNames)),
+      total: new Prisma.Decimal(1 + Math.random() * 1000),
+    };
+    forOrders.push(datum);
+  }
+  console.log({ forOrders });
+  await prisma.orderTest.createMany({
+    data: forOrders,
+  });
+
+  const forCompany = [];
+  for (let i = 1; i <= 20; i++) {
+    const datum: Omit<CompanyTable, "id"> = {
+      name: faker.company.name(),
+    };
+    forCompany.push(datum);
+  }
+  console.log({ forCompany });
+  await prisma.companyTable.createMany({
+    data: forCompany,
+    skipDuplicates: true,
+  });
+
+  const countCompanyNames = await prisma.companyTable.count();
+
+  const forJoinTable = [];
+  for (let i = 1; i <= 1_500; i++) {
+    const datum = {
+      companyTableId: BigInt(1 + Math.floor(Math.random() * countCompanyNames)),
+      peopleId: BigInt(1 + Math.floor(Math.random() * countCompositeNames)),
+    };
+    forJoinTable.push(datum);
+  }
+
+  // console.log({ forJoinTable });
+  await prisma.joinBad.createMany({
+    data: forJoinTable,
+  });
+  await prisma.joinCool.createMany({
+    data: forJoinTable,
+  });
 }
 
 main()

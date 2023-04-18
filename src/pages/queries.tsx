@@ -52,6 +52,14 @@ export default function Indexes() {
     undefined,
     trpcOpts,
   );
+  const { data: subqueryBad } = api.queries.subqueryBad.useQuery(
+    undefined,
+    trpcOpts,
+  );
+  const { data: subqueryCool } = api.queries.subqueryCool.useQuery(
+    undefined,
+    trpcOpts,
+  );
 
   return (
     <div className="flex flex-col gap-4">
@@ -87,6 +95,14 @@ export default function Indexes() {
       <Tablita
         data={pivotCool}
         title="cool pivot query!"
+      />
+      <Tablita
+        data={subqueryBad}
+        title="bad subquery with temporal table 😒!"
+      />
+      <Tablita
+        data={subqueryCool}
+        title="cool subquery 😍!"
       />
     </div>
   );

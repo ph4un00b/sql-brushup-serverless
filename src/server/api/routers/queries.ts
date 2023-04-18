@@ -216,4 +216,55 @@ export const queriesRouter = createTRPCRouter({
       console.log(out);
       return { ...out, rows };
     }),
+  subqueryBad: publicProcedure
+    .query(async () => {
+      const queryStart = performance.now();
+      const conn = db.connection();
+      const { rows, time } = await conn.execute(
+        `
+				explain format=tree
+				SELECT
+				DISTINCT
+					CompositePeople.firstName, CompositePeople.lastName
+				FROM
+					CompositePeople
+					INNER JOIN OrderTest ON CompositePeople.id = OrderTest.customerId
+				WHERE
+					CompositePeople.firstName = 'al'
+				and
+					OrderTest.total	 > 599
+				order by
+					CompositePeople.firstName
+				asc
+				`,
+      );
+      const serverQueryTime = performance.now() - queryStart;
+
+      const out = { tag: "subquery-bad", time, serverQueryTime };
+      console.log(out);
+      return { ...out, rows };
+    }),
+  subqueryCool: publicProcedure
+    .query(async () => {
+      const queryStart = performance.now();
+      const conn = db.connection();
+      const { rows, time } = await conn.execute(
+        `
+				explain format=tree
+				SELECT * FROM CompositePeople
+				WHERE
+					id IN (
+						SELECT customerId FROM OrderTest
+						WHERE total > 599
+					)
+				AND
+					CompositePeople.firstName = 'al'
+				`,
+      );
+      const serverQueryTime = performance.now() - queryStart;
+
+      const out = { tag: "subquery-cool", time, serverQueryTime };
+      console.log(out);
+      return { ...out, rows };
+    }),
 });
