@@ -60,6 +60,10 @@ export default function Indexes() {
     undefined,
     trpcOpts,
   );
+  const { data: cte } = api.queries.cte.useQuery(
+    undefined,
+    trpcOpts,
+  );
 
   return (
     <div className="flex flex-col gap-4">
@@ -103,6 +107,10 @@ export default function Indexes() {
       <Tablita
         data={subqueryCool}
         title="cool subquery 😍!"
+      />
+      <Tablita
+        data={cte}
+        title="cte 😍!"
       />
     </div>
   );

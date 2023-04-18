@@ -267,4 +267,39 @@ export const queriesRouter = createTRPCRouter({
       console.log(out);
       return { ...out, rows };
     }),
+  /**
+   * @see https://github.com/planetscale/discussion/discussions/285
+   * @see https://vitess.io/docs/17.0/reference/compatibility/mysql-compatibility/
+   * @see
+   */
+  cte: publicProcedure
+    .query(async () => {
+      const queryStart = performance.now();
+      const conn = db.connection();
+      try {
+        const { rows, time } = await conn.execute(
+          `
+				WITH above_x as (
+					select
+						customerId, ROUND(total / 100, 0) * 100 as avg
+					from OrderTest
+					where total > 550
+				)
+
+				select * from above_x;
+				`,
+        );
+      } catch (error) {
+        const serverQueryTime = performance.now() - queryStart;
+        const out = { tag: "cte", serverQueryTime };
+        console.log(out);
+        return { ...out, rows: [{ "not-suported": "😒 planetscale" }] };
+      }
+
+      // const serverQueryTime = performance.now() - queryStart;
+
+      // const out = { tag: "subquery-cool", time, serverQueryTime };
+      // console.log(out);
+      // return { ...out, rows };
+    }),
 });
