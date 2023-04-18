@@ -19,6 +19,38 @@ datasource db {
   relationMode = "prisma"
 }
 
+model JoinBad {
+  // id             BigInt          @id @default(autoincrement()) @db.UnsignedBigInt
+  company        CompanyTable    @relation(fields: [companyTableId], references: [id])
+  companyTableId BigInt          @db.UnsignedBigInt
+  people         CompositePeople @relation(fields: [peopleId], references: [id])
+  peopleId       BigInt          @db.UnsignedBigInt
+  createdAt      DateTime?       @default(now())
+  createdBy      String?         @default("seed") @db.VarChar(20)
+
+  @@id(fields: [companyTableId, peopleId], name: "pk_pivot")
+}
+
+model JoinCool {
+  company        CompanyTable    @relation(fields: [companyTableId], references: [id])
+  companyTableId BigInt          @db.UnsignedBigInt
+  people         CompositePeople @relation(fields: [peopleId], references: [id])
+  peopleId       BigInt          @db.UnsignedBigInt
+  createdAt      DateTime?       @default(now())
+  createdBy      String?         @default("seed") @db.VarChar(20)
+
+  @@id(fields: [companyTableId, peopleId], name: "pk_pivot")
+  @@index([companyTableId])
+  @@index([peopleId])
+}
+
+model CompanyTable {
+  id       BigInt     @id @default(autoincrement()) @db.UnsignedBigInt
+  name     String     @unique @db.VarChar(25)
+  joinBad  JoinBad[]
+  joinCool JoinCool[]
+}
+
 model RandomTable {
   id      BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
   size    Int      @db.UnsignedSmallInt
@@ -62,12 +94,14 @@ model HistoryIssue {
 }
 
 model CompositePeople {
-  id        BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
-  firstName String   @db.VarChar(250)
-  lastName  String   @db.VarChar(250)
-  email     String   @db.VarChar(250)
-  birthday  DateTime @db.Date
-  bio       String   @db.VarChar(255)
+  id        BigInt     @id @default(autoincrement()) @db.UnsignedBigInt
+  firstName String     @db.VarChar(250)
+  lastName  String     @db.VarChar(250)
+  email     String     @db.VarChar(250)
+  birthday  DateTime   @db.Date
+  bio       String     @db.VarChar(255)
+  joinBad   JoinBad[]
+  joinCool  JoinCool[]
 
   @@index(fields: [email], name: "email")
   // @@index(fields: [firstName], name: "fn")

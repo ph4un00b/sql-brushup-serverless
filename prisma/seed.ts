@@ -1,8 +1,54 @@
-import { CompositePeople, PrismaClient, RandomTable } from "@prisma/client";
+import {
+  CompanyTable,
+  CompositePeople,
+  JoinBad,
+  PrismaClient,
+  RandomTable,
+} from "@prisma/client";
 import { faker } from "@faker-js/faker";
 
 const prisma = new PrismaClient();
 async function main() {
+  /**
+   * @todo limit reseeding (on PS, up to 10M writes)
+   * up to 100k for 100 reseeds!
+   * up to 10k for 1k reseeds!
+   * up to 1k for 10k reseeds!
+   */
+
+  const forCompany = [];
+  for (let i = 1; i <= 20; i++) {
+    const datum: Omit<CompanyTable, "id"> = {
+      name: faker.company.name(),
+    };
+    forCompany.push(datum);
+  }
+  console.log({ forCompany });
+  await prisma.companyTable.createMany({
+    data: forCompany,
+    skipDuplicates: true,
+  });
+
+  const countCompositeNames = await prisma.compositePeople.count();
+  const countCompanyNames = await prisma.companyTable.count();
+
+  const forJoinTable = [];
+  for (let i = 1; i <= 1_500; i++) {
+    const datum = {
+      companyTableId: BigInt(1 + Math.floor(Math.random() * countCompanyNames)),
+      peopleId: BigInt(1 + Math.floor(Math.random() * countCompositeNames)),
+    };
+    forJoinTable.push(datum);
+  }
+
+  // console.log({ forJoinTable });
+  await prisma.joinBad.createMany({
+    data: forJoinTable,
+  });
+  await prisma.joinCool.createMany({
+    data: forJoinTable,
+  });
+
   const forRandomTable = [];
   for (let i = 1; i <= 20; i++) {
     const datum: Omit<RandomTable, "id"> = {

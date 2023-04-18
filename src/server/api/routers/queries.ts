@@ -168,4 +168,52 @@ export const queriesRouter = createTRPCRouter({
       console.log(out);
       return { ...out, rows };
     }),
+  pivotBad: publicProcedure
+    .query(async () => {
+      const queryStart = performance.now();
+      const conn = db.connection();
+      const { rows, time } = await conn.execute(
+        `
+				explain format=tree
+				-- explain
+				SELECT
+					CompanyTable.name, CompositePeople.email
+				FROM CompanyTable
+					LEFT JOIN JoinBad ON JoinBad.companyTableId = CompanyTable.id
+					LEFT JOIN CompositePeople ON CompositePeople.id = JoinBad.peopleId
+				WHERE
+					CompanyTable.id <= 15
+				-- LIMIT 10
+				`,
+      );
+      const serverQueryTime = performance.now() - queryStart;
+
+      const out = { tag: "pivot-bad", time, serverQueryTime };
+      console.log(out);
+      return { ...out, rows };
+    }),
+  pivotCool: publicProcedure
+    .query(async () => {
+      const queryStart = performance.now();
+      const conn = db.connection();
+      const { rows, time } = await conn.execute(
+        `
+				explain format=tree
+				-- explain
+				SELECT
+					CompanyTable.name, CompositePeople.email
+				FROM CompanyTable
+					LEFT JOIN JoinCool ON JoinCool.companyTableId = CompanyTable.id
+					LEFT JOIN CompositePeople ON CompositePeople.id = JoinCool.peopleId
+				WHERE
+					CompanyTable.id <= 15
+				-- LIMIT 10
+				`,
+      );
+      const serverQueryTime = performance.now() - queryStart;
+
+      const out = { tag: "pivot-cool", time, serverQueryTime };
+      console.log(out);
+      return { ...out, rows };
+    }),
 });

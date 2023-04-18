@@ -44,6 +44,14 @@ export default function Indexes() {
     undefined,
     trpcOpts,
   );
+  const { data: pivotBad } = api.queries.pivotBad.useQuery(
+    undefined,
+    trpcOpts,
+  );
+  const { data: pivotCool } = api.queries.pivotCool.useQuery(
+    undefined,
+    trpcOpts,
+  );
 
   return (
     <div className="flex flex-col gap-4">
@@ -71,6 +79,14 @@ export default function Indexes() {
       <Tablita
         data={redundant}
         title="exact set + optimal query 😍!"
+      />
+      <Tablita
+        data={pivotBad}
+        title="bad pivot query!"
+      />
+      <Tablita
+        data={pivotCool}
+        title="cool pivot query!"
       />
     </div>
   );
