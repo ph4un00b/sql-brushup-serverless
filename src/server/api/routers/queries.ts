@@ -270,7 +270,7 @@ export const queriesRouter = createTRPCRouter({
   /**
    * @see https://github.com/planetscale/discussion/discussions/285
    * @see https://vitess.io/docs/17.0/reference/compatibility/mysql-compatibility/
-   * @see
+   * @see https://dev.mysql.com/doc/refman/8.0/en/with.html
    */
   cte: publicProcedure
     .query(async () => {
