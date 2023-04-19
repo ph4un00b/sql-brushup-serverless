@@ -354,4 +354,39 @@ export const queriesRouter = createTRPCRouter({
       console.log(out);
       return { ...out, rows };
     }),
+  windowFunc: publicProcedure
+    .query(async () => {
+      const queryStart = performance.now();
+      const conn = db.connection();
+      const { rows, time } = await conn.execute(
+        `
+				SELECT
+						customerId,
+						total,
+						ROUND(total / 100, 0) * 100 AS total_rounded,
+						-- repeated queries
+						ROW_NUMBER() OVER (PARTITION BY ROUND(total / 100, 0) * 100 ORDER BY total DESC) AS num,
+						FIRST_VALUE(total) OVER (PARTITION BY ROUND(total / 100, 0) * 100 ORDER BY total DESC) AS highest,
+						FIRST_VALUE(total) OVER (PARTITION BY ROUND(total / 100, 0) * 100 ORDER BY total ASC) AS lowest
+						-- ROW_NUMBER() OVER (t_des) AS num,
+						-- FIRST_VALUE(total) OVER (t_des) AS highest,
+						-- FIRST_VALUE(total) OVER (t_asc) AS lowest
+				FROM
+						OrderTest
+				-- not supported by now
+				-- WINDOW
+				--		t_asc AS (PARTITION BY ROUND(total / 100, 0) * 100 ORDER BY total ASC),
+				--		t_des AS (PARTITION BY ROUND(total / 100, 0) * 100 ORDER BY total DESC)
+				ORDER BY
+						total_rounded DESC
+				limit 1
+				`,
+      );
+
+      const serverQueryTime = performance.now() - queryStart;
+
+      const out = { tag: "window-func", time, serverQueryTime };
+      console.log(out);
+      return { ...out, rows };
+    }),
 });

@@ -72,6 +72,10 @@ export default function Indexes() {
     undefined,
     trpcOpts,
   );
+  const { data: windowFunc } = api.queries.windowFunc.useQuery(
+    undefined,
+    trpcOpts,
+  );
 
   return (
     <div className="flex flex-col gap-4">
@@ -127,6 +131,10 @@ export default function Indexes() {
       <Tablita
         data={union}
         title="union!"
+      />
+      <Tablita
+        data={windowFunc}
+        title="window-func!"
       />
     </div>
   );

@@ -48,3 +48,14 @@ testing serverless / sql stuff ftw! 🌌
 
 - [x] test access query FULL-TEXT aka -> select * from table match(col) against
 - [x] test access query FULL-TEXT in Boolean mode
+
+## queries
+
+- [x] analyze
+- [x] query obfuscation
+- [x] redundant queries
+- [x] subqueries
+- [x] cte
+- [x] recursive cte
+- [x] union
+- [x] windows functions
