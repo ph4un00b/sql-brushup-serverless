@@ -524,4 +524,53 @@ export const queriesRouter = createTRPCRouter({
       console.log(out);
       return { ...out, rows };
     }),
+  complexSorting: publicProcedure
+    .query(async () => {
+      const queryStart = performance.now();
+      const conn = db.connection();
+      const { rows, time } = await conn.execute(
+        `
+				SELECT
+				*
+			FROM
+				CompositePeople
+			WHERE
+				firstName = 'Fau'
+			ORDER BY
+				lastName, birthday
+			limit 6
+				`,
+      );
+
+      const serverQueryTime = performance.now() - queryStart;
+
+      const out = { tag: "complex-sorting", time, serverQueryTime };
+      console.log(out);
+      return { ...out, rows };
+    }),
+  explainComplex: publicProcedure
+    .query(async () => {
+      const queryStart = performance.now();
+      const conn = db.connection();
+      const { rows, time } = await conn.execute(
+        `
+				explain
+				SELECT
+					*
+				FROM
+					CompositePeople
+				WHERE
+					firstName = 'Fau'
+				ORDER BY
+					lastName, birthday
+				limit 6
+					`,
+      );
+
+      const serverQueryTime = performance.now() - queryStart;
+
+      const out = { tag: "complex-exp", time, serverQueryTime };
+      console.log(out);
+      return { ...out, rows };
+    }),
 });

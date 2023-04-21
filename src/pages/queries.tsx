@@ -103,6 +103,15 @@ export default function Indexes() {
       undefined,
       trpcOpts,
     );
+  const { data: complexSorting } = api.queries.complexSorting.useQuery(
+    undefined,
+    trpcOpts,
+  );
+  const { data: explainComplex } = api.queries.explainComplex
+    .useQuery(
+      undefined,
+      trpcOpts,
+    );
 
   return (
     <div className="flex flex-col gap-4">
@@ -186,6 +195,14 @@ export default function Indexes() {
       <Tablita
         data={explainIndexed}
         title="indexed backwards explained!"
+      />
+      <Tablita
+        data={complexSorting}
+        title="composite index sort!"
+      />
+      <Tablita
+        data={explainComplex}
+        title="composite sort explained!"
       />
     </div>
   );

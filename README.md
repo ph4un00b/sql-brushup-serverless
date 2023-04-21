@@ -62,3 +62,4 @@ testing serverless / sql stuff ftw! 🌌
 - [x] sort
 - [x] deterministic sort
 - [x] indexed sort
+- [x] composite indexed sort
