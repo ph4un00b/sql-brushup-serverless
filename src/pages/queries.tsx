@@ -76,6 +76,33 @@ export default function Indexes() {
     undefined,
     trpcOpts,
   );
+  const { data: simpleSorting } = api.queries.simpleSorting.useQuery(
+    undefined,
+    trpcOpts,
+  );
+  const { data: deterministicSorting } = api.queries.deterministicSorting
+    .useQuery(
+      undefined,
+      trpcOpts,
+    );
+  const { data: explainSorting } = api.queries.explainSorting.useQuery(
+    undefined,
+    trpcOpts,
+  );
+  const { data: explainDeterministic } = api.queries.explainDeterministic
+    .useQuery(
+      undefined,
+      trpcOpts,
+    );
+  const { data: indexedSorting } = api.queries.indexedSorting.useQuery(
+    undefined,
+    trpcOpts,
+  );
+  const { data: explainIndexed } = api.queries.explainIndexed
+    .useQuery(
+      undefined,
+      trpcOpts,
+    );
 
   return (
     <div className="flex flex-col gap-4">
@@ -135,6 +162,30 @@ export default function Indexes() {
       <Tablita
         data={windowFunc}
         title="window-func!"
+      />
+      <Tablita
+        data={simpleSorting}
+        title="simple sort!"
+      />
+      <Tablita
+        data={explainSorting}
+        title="simple explained!"
+      />
+      <Tablita
+        data={deterministicSorting}
+        title="deterministic sort!"
+      />
+      <Tablita
+        data={explainDeterministic}
+        title="deterministic explained!"
+      />
+      <Tablita
+        data={indexedSorting}
+        title="indexed sort backwards!"
+      />
+      <Tablita
+        data={explainIndexed}
+        title="indexed backwards explained!"
       />
     </div>
   );

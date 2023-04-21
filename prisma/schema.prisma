@@ -110,6 +110,7 @@ model CompositePeople {
   joinCool  JoinCool[]
 
   @@index(fields: [email], name: "email")
+  @@index(fields: [birthday(sort: Asc)], name: "nacido")
   // @@index(fields: [firstName], name: "fn")
   // @@index(fields: [lastName], name: "ln")
   // @@index(fields: [birthday], name: "b")

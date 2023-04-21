@@ -389,4 +389,139 @@ export const queriesRouter = createTRPCRouter({
       console.log(out);
       return { ...out, rows };
     }),
+  simpleSorting: publicProcedure
+    .query(async () => {
+      const queryStart = performance.now();
+      const conn = db.connection();
+      const { rows, time } = await conn.execute(
+        `
+				SELECT
+					id,
+					birthday,
+					ROW_NUMBER() OVER (PARTITION BY birthday) AS num
+				FROM CompositePeople
+				ORDER BY birthday DESC
+				-- DESC
+				LIMIT 10
+				`,
+      );
+
+      const serverQueryTime = performance.now() - queryStart;
+
+      const out = { tag: "simple-sorting", time, serverQueryTime };
+      console.log(out);
+      return { ...out, rows };
+    }),
+  explainSorting: publicProcedure
+    .query(async () => {
+      const queryStart = performance.now();
+      const conn = db.connection();
+      const { rows, time } = await conn.execute(
+        `
+				explain
+				SELECT
+					id,
+					birthday,
+					ROW_NUMBER() OVER (PARTITION BY birthday) AS num
+				FROM CompositePeople
+				ORDER BY birthday DESC
+				LIMIT 10
+				`,
+      );
+
+      const serverQueryTime = performance.now() - queryStart;
+
+      const out = { tag: "simple-exp", time, serverQueryTime };
+      console.log(out);
+      return { ...out, rows };
+    }),
+  deterministicSorting: publicProcedure
+    .query(async () => {
+      const queryStart = performance.now();
+      const conn = db.connection();
+      const { rows, time } = await conn.execute(
+        `
+				SELECT
+					id,
+					birthday,
+					ROW_NUMBER() OVER (PARTITION BY birthday) AS num
+				FROM CompositePeople
+				ORDER BY birthday DESC, id
+				-- DESC
+				LIMIT 10
+				`,
+      );
+
+      const serverQueryTime = performance.now() - queryStart;
+
+      const out = { tag: "deterministic-sorting", time, serverQueryTime };
+      console.log(out);
+      return { ...out, rows };
+    }),
+  explainDeterministic: publicProcedure
+    .query(async () => {
+      const queryStart = performance.now();
+      const conn = db.connection();
+      const { rows, time } = await conn.execute(
+        `
+				explain
+				SELECT
+					id,
+					birthday,
+					ROW_NUMBER() OVER (PARTITION BY birthday) AS num
+				FROM CompositePeople
+				ORDER BY birthday DESC, id
+				LIMIT 10
+				`,
+      );
+
+      const serverQueryTime = performance.now() - queryStart;
+
+      const out = { tag: "deterministic-exp", time, serverQueryTime };
+      console.log(out);
+      return { ...out, rows };
+    }),
+  indexedSorting: publicProcedure
+    .query(async () => {
+      const queryStart = performance.now();
+      const conn = db.connection();
+      const { rows, time } = await conn.execute(
+        `
+				SELECT
+					id,
+					birthday
+				FROM CompositePeople
+				ORDER BY birthday ASC, id ASC
+				LIMIT 10
+				`,
+      );
+
+      const serverQueryTime = performance.now() - queryStart;
+
+      const out = { tag: "indexed-sorting", time, serverQueryTime };
+      console.log(out);
+      return { ...out, rows };
+    }),
+  explainIndexed: publicProcedure
+    .query(async () => {
+      const queryStart = performance.now();
+      const conn = db.connection();
+      const { rows, time } = await conn.execute(
+        `
+				explain
+				SELECT
+					id,
+					birthday
+				FROM CompositePeople
+				ORDER BY birthday DESC, id DESC
+				LIMIT 10 OFFSET 100
+				`,
+      );
+
+      const serverQueryTime = performance.now() - queryStart;
+
+      const out = { tag: "indexed-exp", time, serverQueryTime };
+      console.log(out);
+      return { ...out, rows };
+    }),
 });

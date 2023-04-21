@@ -59,3 +59,6 @@ testing serverless / sql stuff ftw! 🌌
 - [x] recursive cte
 - [x] union
 - [x] windows functions
+- [x] sort
+- [x] deterministic sort
+- [x] indexed sort
