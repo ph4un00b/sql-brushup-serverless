@@ -28,6 +28,14 @@ export default function React() {
     undefined,
     trpcOpts,
   );
+  const { data: complexMD5 } = api.hashing.complexMD5.useQuery(
+    undefined,
+    trpcOpts,
+  );
+  const { data: complexMD5Exp } = api.hashing.complexMD5Exp.useQuery(
+    undefined,
+    trpcOpts,
+  );
   return (
     <div className="flex flex-col gap-4">
       <Metrics />
@@ -54,6 +62,14 @@ export default function React() {
       <Tablita
         data={binExp}
         title="bin select explained!"
+      />
+      <Tablita
+        data={complexMD5}
+        title="complex md5 select!"
+      />
+      <Tablita
+        data={complexMD5Exp}
+        title="complex md5 select explained!"
       />
     </div>
   );

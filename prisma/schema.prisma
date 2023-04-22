@@ -19,6 +19,16 @@ datasource db {
   relationMode = "prisma"
 }
 
+model UniqueData {
+  id        BigInt  @id @default(autoincrement()) @db.UnsignedBigInt
+  first     String  @db.VarChar(100)
+  last      String  @db.VarChar(100)
+  secondary String? @db.VarChar(100)
+  specific  String? @db.VarChar(100)
+  // instead of creating a composite index
+  md5       Bytes?  @unique @default(dbgenerated("(UNHEX(MD5(CONCAT_WS('|', first, secondary, specific, last))))")) @db.Binary(16)
+}
+
 model UrlTest {
   id     BigInt  @id @default(autoincrement()) @db.UnsignedBigInt
   url    String  @db.Text

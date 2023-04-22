@@ -7,6 +7,7 @@ import {
   PrismaClient,
   RandomTable,
   RentalsTest,
+  UniqueData,
   UrlTest,
 } from "@prisma/client";
 import { faker } from "@faker-js/faker";
@@ -297,6 +298,23 @@ async function main() {
   console.log({ forURLS });
   await prisma.urlTest.createMany({
     data: forURLS,
+    skipDuplicates: false,
+  });
+
+  // unique-data
+  const forUniqueData = [];
+
+  for (let i = 1; i <= 20; i++) {
+    const datum: Omit<UniqueData, "id" | "md5" | "specific"> = {
+      first: faker.name.jobType(),
+      secondary: faker.music.genre(),
+      last: faker.hacker.verb(),
+    };
+    forUniqueData.push(datum);
+  }
+  console.log({ forUniqueData });
+  await prisma.uniqueData.createMany({
+    data: forUniqueData,
     skipDuplicates: false,
   });
 }

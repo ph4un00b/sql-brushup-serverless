@@ -64,3 +64,8 @@ testing serverless / sql stuff ftw! 🌌
 - [x] indexed sort
 - [x] composite indexed sort
 - [x] conditional counting
+
+## scenarios
+
+- [x] composite primary key vs composite unique
+- [x] hashing with md5 for compacting data
