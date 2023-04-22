@@ -6,6 +6,7 @@ import {
   Prisma,
   PrismaClient,
   RandomTable,
+  RentalsTest,
 } from "@prisma/client";
 import { faker } from "@faker-js/faker";
 
@@ -218,51 +219,69 @@ async function main() {
     console.timeEnd("compositePeople" + many);
   }
 
-  const countCompositeNames = await prisma.compositePeople.count();
+  // const countCompositeNames = await prisma.compositePeople.count();
 
-  const forOrders = [];
-  for (let i = 1; i <= 200; i++) {
-    const datum: Omit<OrderTest, "id"> = {
-      customerId: BigInt(1 + Math.floor(Math.random() * countCompositeNames)),
-      total: new Prisma.Decimal(1 + Math.random() * 1000),
+  // const forOrders = [];
+  // for (let i = 1; i <= 200; i++) {
+  //   const datum: Omit<OrderTest, "id"> = {
+  //     customerId: BigInt(1 + Math.floor(Math.random() * countCompositeNames)),
+  //     total: new Prisma.Decimal(1 + Math.random() * 1000),
+  //   };
+  //   forOrders.push(datum);
+  // }
+  // console.log({ forOrders });
+  // await prisma.orderTest.createMany({
+  //   data: forOrders,
+  // });
+
+  // const forCompany = [];
+  // for (let i = 1; i <= 20; i++) {
+  //   const datum: Omit<CompanyTable, "id"> = {
+  //     name: faker.company.name(),
+  //   };
+  //   forCompany.push(datum);
+  // }
+  // console.log({ forCompany });
+  // await prisma.companyTable.createMany({
+  //   data: forCompany,
+  //   skipDuplicates: true,
+  // });
+
+  // const countCompanyNames = await prisma.companyTable.count();
+
+  // const forJoinTable = [];
+  // for (let i = 1; i <= 1_500; i++) {
+  //   const datum = {
+  //     companyTableId: BigInt(1 + Math.floor(Math.random() * countCompanyNames)),
+  //     peopleId: BigInt(1 + Math.floor(Math.random() * countCompositeNames)),
+  //   };
+  //   forJoinTable.push(datum);
+  // }
+
+  // // console.log({ forJoinTable });
+  // await prisma.joinBad.createMany({
+  //   data: forJoinTable,
+  // });
+  // await prisma.joinCool.createMany({
+  //   data: forJoinTable,
+  // });
+
+  const forRentals = [];
+  const startDate = new Date("2022-01-01");
+  const endDate = new Date("2022-12-31");
+  for (let i = 1; i <= 100; i++) {
+    const datum: Omit<RentalsTest, "id"> = {
+      rentalDate: new Date(
+        startDate.getTime() +
+          Math.random() * (endDate.getTime() - startDate.getTime()),
+      ),
     };
-    forOrders.push(datum);
+    forRentals.push(datum);
   }
-  console.log({ forOrders });
-  await prisma.orderTest.createMany({
-    data: forOrders,
-  });
-
-  const forCompany = [];
-  for (let i = 1; i <= 20; i++) {
-    const datum: Omit<CompanyTable, "id"> = {
-      name: faker.company.name(),
-    };
-    forCompany.push(datum);
-  }
-  console.log({ forCompany });
-  await prisma.companyTable.createMany({
-    data: forCompany,
-    skipDuplicates: true,
-  });
-
-  const countCompanyNames = await prisma.companyTable.count();
-
-  const forJoinTable = [];
-  for (let i = 1; i <= 1_500; i++) {
-    const datum = {
-      companyTableId: BigInt(1 + Math.floor(Math.random() * countCompanyNames)),
-      peopleId: BigInt(1 + Math.floor(Math.random() * countCompositeNames)),
-    };
-    forJoinTable.push(datum);
-  }
-
-  // console.log({ forJoinTable });
-  await prisma.joinBad.createMany({
-    data: forJoinTable,
-  });
-  await prisma.joinCool.createMany({
-    data: forJoinTable,
+  console.log({ forRentals });
+  await prisma.rentalsTest.createMany({
+    data: forRentals,
+    skipDuplicates: false,
   });
 }
 

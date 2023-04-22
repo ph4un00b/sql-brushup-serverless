@@ -19,6 +19,11 @@ datasource db {
   relationMode = "prisma"
 }
 
+model RentalsTest {
+  id         BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  rentalDate DateTime @db.Date
+}
+
 model OrderTest {
   id         BigInt  @id @default(autoincrement()) @db.UnsignedBigInt
   customerId BigInt
@@ -61,6 +66,7 @@ model RandomTable {
   id      BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
   size    Int      @db.UnsignedSmallInt
   title   String   @db.VarChar(100)
+  // randomDate DateTime @default(dbgenerated("(CURRENT_DATE + INTERVAL FLOOR(RAND() * 365) DAY)")) @db.DateTime()
   dueDate DateTime @db.Date
   dueTime DateTime @db.Time
 

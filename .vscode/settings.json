@@ -5,6 +5,7 @@
 		"birthdate",
 		"clsx",
 		"conche",
+		"DAYOFWEEK",
 		"fulltext",
 		"handlea",
 		"headlessui",
@@ -12,6 +13,7 @@
 		"Planetscale",
 		"pscale",
 		"refetches",
+		"semana",
 		"Tablita",
 		"tailwindcss",
 		"trpc"

@@ -532,13 +532,13 @@ export const queriesRouter = createTRPCRouter({
         `
 				SELECT
 				*
-			FROM
-				CompositePeople
-			WHERE
-				firstName = 'Fau'
-			ORDER BY
-				lastName, birthday
-			limit 6
+				FROM
+					CompositePeople
+				WHERE
+					firstName = 'Fau'
+				ORDER BY
+					lastName, birthday
+				limit 6
 				`,
       );
 
@@ -548,6 +548,14 @@ export const queriesRouter = createTRPCRouter({
       console.log(out);
       return { ...out, rows };
     }),
+  /**
+   * If both key parts are sorted as ascending or descending, we get no file sort.
+   * If one key part is sorted as ascending and the other as descending,
+   * we get a file sort.
+   * If we swap the order of key parts in our index, we may get a backward index scan.
+   * Remember that it's not the order of columns in the index that matters,
+   * but the relationship between them and the sorting direction in the query.
+   */
   explainComplex: publicProcedure
     .query(async () => {
       const queryStart = performance.now();
@@ -570,6 +578,73 @@ export const queriesRouter = createTRPCRouter({
       const serverQueryTime = performance.now() - queryStart;
 
       const out = { tag: "complex-exp", time, serverQueryTime };
+      console.log(out);
+      return { ...out, rows };
+    }),
+  counting: publicProcedure
+    .query(async () => {
+      const queryStart = performance.now();
+      const conn = db.connection();
+      const { rows, time } = await conn.execute(
+        `
+				SELECT
+					rentalDate,
+					-- This function returns a value between 1 (Sunday) and 7 (Saturday)
+					DAYOFWEEK(rentalDate)
+				FROM
+					RentalsTest
+				LIMIT 6
+					`,
+      );
+
+      const serverQueryTime = performance.now() - queryStart;
+
+      const out = { tag: "conditional-counting", time, serverQueryTime };
+      console.log(out);
+      return { ...out, rows };
+    }),
+  /**
+   * @see https://dev.mysql.com/doc/refman/5.7/en/date-and-time-functions.html
+   */
+  condCount: publicProcedure
+    .query(async () => {
+      const queryStart = performance.now();
+      const conn = db.connection();
+      const { rows, time } = await conn.execute(
+        `
+				SELECT
+						COUNT(*) AS total,
+						COUNT(IF(DAYOFWEEK(rentalDate) NOT IN (1, 7), 1, NULL)) as fin_de_semana,
+						COUNT(IF(DAYOFWEEK(rentalDate) IN (1, 7), 1, NULL)) AS entre_semana,
+						COUNT(IF(UNIX_TIMESTAMP(rentalDate) BETWEEN UNIX_TIMESTAMP('2022-06-01') AND UNIX_TIMESTAMP('2023-12-31'), 1, null)) as en_range
+				FROM RentalsTest;
+					`,
+      );
+
+      const serverQueryTime = performance.now() - queryStart;
+
+      const out = { tag: "counting", time, serverQueryTime };
+      console.log(out);
+      return { ...out, rows };
+    }),
+  sumCount: publicProcedure
+    .query(async () => {
+      const queryStart = performance.now();
+      const conn = db.connection();
+      const { rows, time } = await conn.execute(
+        `
+				SELECT
+						COUNT(*) AS total,
+						SUM(DAYOFWEEK(rentalDate) NOT IN (1, 7)) as fin_de_semana,
+						SUM(DAYOFWEEK(rentalDate) IN (1, 7)) AS entre_semana,
+						SUM(UNIX_TIMESTAMP(rentalDate) BETWEEN UNIX_TIMESTAMP('2022-06-01') AND UNIX_TIMESTAMP('2023-12-31')) as en_range
+				FROM RentalsTest;
+					`,
+      );
+
+      const serverQueryTime = performance.now() - queryStart;
+
+      const out = { tag: "sum-counting", time, serverQueryTime };
       console.log(out);
       return { ...out, rows };
     }),

@@ -112,6 +112,21 @@ export default function Indexes() {
       undefined,
       trpcOpts,
     );
+  const { data: counting } = api.queries.counting
+    .useQuery(
+      undefined,
+      trpcOpts,
+    );
+  const { data: condCount } = api.queries.condCount
+    .useQuery(
+      undefined,
+      trpcOpts,
+    );
+  const { data: sumCount } = api.queries.sumCount
+    .useQuery(
+      undefined,
+      trpcOpts,
+    );
 
   return (
     <div className="flex flex-col gap-4">
@@ -203,6 +218,18 @@ export default function Indexes() {
       <Tablita
         data={explainComplex}
         title="composite sort explained!"
+      />
+      <Tablita
+        data={counting}
+        title="counting!"
+      />
+      <Tablita
+        data={condCount}
+        title="conditional counting!"
+      />
+      <Tablita
+        data={sumCount}
+        title="conditional counting with sum!"
       />
     </div>
   );
