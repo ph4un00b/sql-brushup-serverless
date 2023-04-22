@@ -19,6 +19,18 @@ datasource db {
   relationMode = "prisma"
 }
 
+model UrlTest {
+  id     BigInt  @id @default(autoincrement()) @db.UnsignedBigInt
+  url    String  @db.Text
+  // good
+  urlMD5 String? @default(dbgenerated("(MD5(url))")) @db.Char(32)
+  // better (⌐■_■)
+  urlBIN Bytes?  @default(dbgenerated("(UNHEX(MD5(url)))")) @db.Binary(16)
+
+  @@index(fields: [urlMD5], name: "md5")
+  @@index(fields: [urlBIN], name: "bin")
+}
+
 model RentalsTest {
   id         BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
   rentalDate DateTime @db.Date

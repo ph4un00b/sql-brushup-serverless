@@ -7,6 +7,7 @@ import {
   PrismaClient,
   RandomTable,
   RentalsTest,
+  UrlTest,
 } from "@prisma/client";
 import { faker } from "@faker-js/faker";
 
@@ -281,6 +282,21 @@ async function main() {
   console.log({ forRentals });
   await prisma.rentalsTest.createMany({
     data: forRentals,
+    skipDuplicates: false,
+  });
+
+  // urls
+  const forURLS = [];
+
+  for (let i = 1; i <= 20; i++) {
+    const datum: Omit<UrlTest, "id" | "urlMD5" | "urlBIN"> = {
+      url: faker.commerce.product(),
+    };
+    forURLS.push(datum);
+  }
+  console.log({ forURLS });
+  await prisma.urlTest.createMany({
+    data: forURLS,
     skipDuplicates: false,
   });
 }
