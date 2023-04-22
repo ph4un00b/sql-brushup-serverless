@@ -9,6 +9,7 @@
 		"fulltext",
 		"handlea",
 		"headlessui",
+		"IFNULL",
 		"Kysely",
 		"Planetscale",
 		"pscale",

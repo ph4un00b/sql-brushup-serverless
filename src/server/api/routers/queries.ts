@@ -648,4 +648,29 @@ export const queriesRouter = createTRPCRouter({
       console.log(out);
       return { ...out, rows };
     }),
+  /**
+   * NULLs
+   */
+
+  /**
+   * SELECT *
+   * FROM my_table
+   * ORDER BY IFNULL(column1 <=> column2, -1) DESC;
+   *
+   * In this query, we're using the IFNULL
+   * function to handle cases where one of
+   * the values being compared is NULL.
+   *
+   * The <=> operator (which is the spaceship operator in MySQL)
+   * returns 0 if the values are equal, 1 if the left value is greater,
+   * and -1 if the right value is greater.
+   *
+   * So in this case, we're sorting the results in
+   * descending order based on the result of
+   * the <=> comparison between column1 and column2.
+   *
+   * If either of these columns is NULL, we'll treat it
+   * as if it were less than any non-null value by returning -1
+   * from the IFNULL function.
+   */
 });
