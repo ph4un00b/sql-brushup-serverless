@@ -19,6 +19,25 @@ datasource db {
   relationMode = "prisma"
 }
 
+enum QueueStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+}
+
+model QueueTest {
+  id         BigInt      @id @default(autoincrement()) @db.UnsignedBigInt
+  payload    String      @db.VarChar(255)
+  owner      Int         @default(0)
+  status     QueueStatus @default(PENDING)
+  available  Int         @default(1) @db.TinyInt()
+  createdAt  DateTime    @default(now())
+  startedAt  DateTime?   @db.Timestamp()
+  finishedAt DateTime?   @db.Timestamp()
+  updatedAt  DateTime    @default(dbgenerated("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")) @db.Timestamp()
+  // uAt        DateTime    @updatedAt
+}
+
 model UniqueData {
   id        BigInt  @id @default(autoincrement()) @db.UnsignedBigInt
   first     String  @db.VarChar(100)
@@ -250,6 +269,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   cats          Cat[]
+  // @todo ALTER TABLE users ADD COLUMN flags TINYINT UNSIGNED DEFAULT 0;
 }
 
 model VerificationToken {

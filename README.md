@@ -69,3 +69,4 @@ testing serverless / sql stuff ftw! 🌌
 
 - [x] composite primary key vs composite unique
 - [x] hashing with md5 for compacting data
+- [x] simple queue

@@ -5,6 +5,8 @@ import {
   OrderTest,
   Prisma,
   PrismaClient,
+  QueueStatus,
+  QueueTest,
   RandomTable,
   RentalsTest,
   UniqueData,
@@ -315,6 +317,33 @@ async function main() {
   console.log({ forUniqueData });
   await prisma.uniqueData.createMany({
     data: forUniqueData,
+    skipDuplicates: false,
+  });
+
+  // queue-test
+  const forQueue: Omit<
+    QueueTest,
+    "id" | "startedAt" | "finishedAt" | "createdAt" | "owner" | "updatedAt"
+  >[] = [];
+
+  for (let i = 1; i <= 20; i++) {
+    const queueStatuses = [
+      QueueStatus.COMPLETED,
+      QueueStatus.IN_PROGRESS,
+      QueueStatus.PENDING,
+    ];
+    const randomIndex = Math.floor(Math.random() * queueStatuses.length);
+
+    const datum = {
+      available: Math.random() > 0.5 ? Number(true) : Number(false),
+      payload: "jamon",
+      status: queueStatuses[randomIndex]!,
+    };
+    forQueue.push(datum); 
+  }
+  console.log({ forQueue });
+  await prisma.queueTest.createMany({
+    data: forQueue,
     skipDuplicates: false,
   });
 }

@@ -1,7 +1,5 @@
-import { useEffect } from "react";
 import { Metrics } from "~/components/metrics";
 import { api } from "~/utils/api";
-import { faker } from "@faker-js/faker";
 import { Tablita } from "~/components/tablita";
 
 const trpcOpts = {
