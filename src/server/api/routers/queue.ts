@@ -82,7 +82,7 @@ export const queueRouter = createTRPCRouter({
 				UPDATE QueueTest
 				SET
 					-- On your application side, you would need to make
-					-- sure each worker process has a unique id. 
+					-- sure each worker process has a unique id.
 					owner = 9999, -- unique worker id
 					available = 0,
 					status = 'IN_PROGRESS'

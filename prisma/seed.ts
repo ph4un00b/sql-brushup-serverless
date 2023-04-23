@@ -3,6 +3,7 @@ import {
   CompositePeople,
   JoinBad,
   OrderTest,
+  PaymentTest,
   Prisma,
   PrismaClient,
   QueueStatus,
@@ -339,11 +340,34 @@ async function main() {
       payload: "jamon",
       status: queueStatuses[randomIndex]!,
     };
-    forQueue.push(datum); 
+    forQueue.push(datum);
   }
   console.log({ forQueue });
   await prisma.queueTest.createMany({
     data: forQueue,
+    skipDuplicates: false,
+  });
+
+  // payment
+  const forPayment = [];
+  const from = new Date("2010-01-01");
+  const upto = new Date("2025-12-31");
+
+  for (const _ of Array.from({ length: 40 })) {
+    const payment: Omit<PaymentTest, "id"> = {
+      amount: new Prisma.Decimal(
+        Math.floor(Math.random() * 1000) + 1,
+      ),
+      paymentDate: new Date(
+        from.getTime() +
+          Math.random() * (upto.getTime() - from.getTime()),
+      ),
+    };
+    forPayment.push(payment);
+  }
+  console.log({ forPayment });
+  await prisma.paymentTest.createMany({
+    data: forPayment,
     skipDuplicates: false,
   });
 }

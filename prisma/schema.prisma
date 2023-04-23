@@ -19,6 +19,18 @@ datasource db {
   relationMode = "prisma"
 }
 
+model PaymentSummary {
+  id     BigInt              @id @default(autoincrement()) @db.UnsignedBigInt
+  amount Decimal             @db.Decimal(10, 2)
+  year   Unsupported("YEAR") @unique
+}
+
+model PaymentTest {
+  id          BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  amount      Decimal  @db.Decimal(10, 2)
+  paymentDate DateTime @db.Timestamp()
+}
+
 enum QueueStatus {
   PENDING
   IN_PROGRESS
@@ -35,7 +47,9 @@ model QueueTest {
   startedAt  DateTime?   @db.Timestamp()
   finishedAt DateTime?   @db.Timestamp()
   updatedAt  DateTime    @default(dbgenerated("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")) @db.Timestamp()
+
   // uAt        DateTime    @updatedAt
+  @@index([owner, available])
 }
 
 model UniqueData {
