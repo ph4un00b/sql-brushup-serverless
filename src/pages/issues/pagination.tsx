@@ -18,13 +18,7 @@ export default function React() {
     cursor: 20_000,
   }, trpcOpts);
 
-  const {
-    data: offsetPages,
-    isLoading,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-  } = api.pagination.offset.useInfiniteQuery(
+  const offsetPages = api.pagination.offset.useInfiniteQuery(
     {
       limit: 5,
     },
@@ -35,6 +29,30 @@ export default function React() {
         return lastPage.next;
       },
       // initialCursor: 1, // <-- optional you can pass an initialCursor
+    },
+  );
+  const { data: badCursor } = api.pagination.badCursor.useQuery(
+    undefined,
+    trpcOpts,
+  );
+  const { data: bestCursor } = api.pagination.bestCursor.useQuery(
+    {
+      limit: 10,
+      cursor: { id: 186681, birthday: "1947-08-30" },
+    },
+    trpcOpts,
+  );
+  const cursorPages = api.pagination.bestCursor.useInfiniteQuery(
+    {
+      limit: 5,
+    },
+    {
+      ...trpcOpts,
+      getNextPageParam: (lastPage) => {
+        console.log({ lastPage });
+        return lastPage.next;
+      },
+      initialCursor: { id: 186681, birthday: "1947-08-30" }, // <-- optional you can pass an initialCursor
     },
   );
 
@@ -51,10 +69,10 @@ export default function React() {
       />
 
       <div>
-        {isLoading ? <p>loading...</p> : (
+        {offsetPages.isLoading ? <p>loading...</p> : (
           <>
             <ul>
-              {offsetPages?.pages.map((group, i) =>
+              {offsetPages.data?.pages.map((group, i) =>
                 group.rows.map((item) => (
                   // @ts-ignore
                   <li key={item.id}>{item.id} : {item.email}</li>
@@ -62,12 +80,48 @@ export default function React() {
               )}
             </ul>
             <Button
-              onClick={() => fetchNextPage()}
-              disabled={!hasNextPage || isFetchingNextPage}
+              onClick={() => offsetPages.fetchNextPage()}
+              disabled={!offsetPages.hasNextPage ||
+                offsetPages.isFetchingNextPage}
             >
-              {isFetchingNextPage
+              {offsetPages.isFetchingNextPage
                 ? "Loading more..."
-                : hasNextPage
+                : offsetPages.hasNextPage
+                ? "Load More"
+                : "Nothing more to load"}
+            </Button>
+          </>
+        )}
+      </div>
+
+      <Tablita
+        data={badCursor}
+        title="badCursor!"
+      />
+      <Tablita
+        data={bestCursor}
+        title="bestCursor 😍!"
+      />
+
+      <div>
+        {cursorPages.isLoading ? <p>loading...</p> : (
+          <>
+            <ul>
+              {cursorPages.data?.pages.map((group, i) =>
+                group.rows.map((item) => (
+                  // @ts-ignore
+                  <li key={item.id}>{item.id} : {item.email}</li>
+                ))
+              )}
+            </ul>
+            <Button
+              onClick={() => cursorPages.fetchNextPage()}
+              disabled={!cursorPages.hasNextPage ||
+                cursorPages.isFetchingNextPage}
+            >
+              {cursorPages.isFetchingNextPage
+                ? "Loading more..."
+                : cursorPages.hasNextPage
                 ? "Load More"
                 : "Nothing more to load"}
             </Button>

@@ -23,6 +23,7 @@ async function sleep(ms: number) {
 // +----+-------------+-----------------+------------+------+---------------+------+---------+------+--------+----------+----------------+
 export const paginationRouter = createTRPCRouter({
   /**
+   * offset pagination
    * @abstract
    *
    * direct addressable pages: 			| ✅
@@ -90,6 +91,100 @@ export const paginationRouter = createTRPCRouter({
       console.log({ next });
 
       const out = { tag: "pagination-offset", time, serverQueryTime };
+      console.log(out);
+      return { ...out, rows, next };
+    }),
+  // +----+-------------+-----------------+------------+-------+----------------+--------+---------+------+--------+----------+-----------------------+
+  // | id | select_type | table           | partitions | type  | possible_keys  | key    | key_len | ref  | rows   | filtered | Extra                 |
+  // +----+-------------+-----------------+------------+-------+----------------+--------+---------+------+--------+----------+-----------------------+
+  // |  1 | SIMPLE      | CompositePeople | NULL       | range | PRIMARY,nacido | nacido | 11      | NULL | 130672 |    50.00 | Using index condition |
+  // +----+-------------+-----------------+------------+-------+----------------+--------+---------+------+--------+----------+-----------------------+
+  badCursor: publicProcedure
+    /**
+     * cursor pagination
+     * @abstract
+     *
+     * direct addressable pages: 			| ❌
+     * simplicity: 										| ❌
+     * handle shifting records: 			| ✅
+     * deep pagination performance: 	| ✅ 250ms
+     */
+    .query(async () => {
+      const queryStart = performance.now();
+      const conn = db.connection();
+      const { rows, time } = await conn.execute(
+        `
+			SELECT
+				*
+			FROM
+				CompositePeople
+			WHERE
+				id > 186681
+				AND
+				birthday >= '1947-08-30'
+			ORDER BY
+				birthday,
+				id
+			LIMIT 10
+			`,
+      );
+      const serverQueryTime = performance.now() - queryStart;
+
+      const out = { tag: "pagination-bad-cursor", time, serverQueryTime };
+      console.log(out);
+      return { ...out, rows };
+    }),
+  bestCursor: publicProcedure
+    .input(z.object({
+      limit: z.number().min(1).max(100),
+      // "cursor" needs to exist, but can be any type
+      cursor: z.object({
+        id: z.number(),
+        birthday: z.string(),
+      }),
+    }))
+    .query(async ({ input }) => {
+      const queryStart = performance.now();
+      const conn = db.connection();
+      const { rows, time } = await conn.execute(
+        `
+			SELECT
+				*
+			FROM
+				CompositePeople
+			WHERE
+				-- maybe early id's could match!
+				birthday > ?
+				OR
+				(birthday = ? AND id > ?)
+			ORDER BY
+				birthday,
+				id
+			LIMIT ?
+			`,
+        [
+          input.cursor.birthday,
+          input.cursor.birthday,
+          input.cursor.id,
+          input.limit + 1,
+        ],
+      );
+      const serverQueryTime = performance.now() - queryStart;
+
+      let next: typeof input.cursor | undefined = undefined;
+      if (rows.length > input.limit) {
+        // console.log({ rows });
+        rows.pop();
+        const last = rows.slice().pop();
+        if (last) {
+          // @ts-ignore
+          next = { id: Number(last?.id), birthday: last?.birthday };
+        }
+      }
+
+      console.log({ next });
+
+      const out = { tag: "pagination-best-cursor", time, serverQueryTime };
       console.log(out);
       return { ...out, rows, next };
     }),
