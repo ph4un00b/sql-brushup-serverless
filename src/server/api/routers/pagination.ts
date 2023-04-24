@@ -203,7 +203,7 @@ export const paginationRouter = createTRPCRouter({
      * direct addressable pages: 			| ✅
      * simplicity: 										| ✅
      * handle shifting records: 			| ❌
-     * deep pagination performance: 	| ✅ 250ms
+     * deep pagination performance: 	| 🆗 250-500ms
      */
     .query(async () => {
       const queryStart = performance.now();
