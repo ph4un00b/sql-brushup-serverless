@@ -188,4 +188,40 @@ export const paginationRouter = createTRPCRouter({
       console.log(out);
       return { ...out, rows, next };
     }),
+  // +----+-------------+-----------------+------------+--------+---------------+---------+---------+--------+-------+----------+---------------------------------+
+  // | id | select_type | table           | partitions | type   | possible_keys | key     | key_len | ref    | rows  | filtered | Extra                           |
+  // +----+-------------+-----------------+------------+--------+---------------+---------+---------+--------+-------+----------+---------------------------------+
+  // |  1 | PRIMARY     | <derived2>      | NULL       | ALL    | NULL          | NULL    | NULL    | NULL   | 20010 |   100.00 | Using temporary; Using filesort |
+  // |  1 | PRIMARY     | cp1             | NULL       | eq_ref | PRIMARY       | PRIMARY | 8       | cp2.id |     1 |   100.00 | NULL                            |
+  // |  2 | DERIVED     | CompositePeople | NULL       | index  | NULL          | nacido  | 3       | NULL   | 20010 |   100.00 | Using index                     |
+  // +----+-------------+-----------------+------------+--------+---------------+---------+---------+--------+-------+----------+---------------------------------+
+  deferredJoin: publicProcedure
+    /**
+     * cursor pagination
+     * @abstract
+     *
+     * direct addressable pages: 			| ✅
+     * simplicity: 										| ✅
+     * handle shifting records: 			| ❌
+     * deep pagination performance: 	| ✅ 250ms
+     */
+    .query(async () => {
+      const queryStart = performance.now();
+      const conn = db.connection();
+      const { rows, time } = await conn.execute(
+        `
+				SELECT * FROM CompositePeople AS cp1
+				INNER JOIN (
+					SELECT id FROM CompositePeople ORDER BY birthday, id LIMIT 10 OFFSET 20000
+				) AS cp2 ON cp1.id = cp2.id
+				ORDER BY
+					cp1.birthday, cp1.id
+			`,
+      );
+      const serverQueryTime = performance.now() - queryStart;
+
+      const out = { tag: "pagination-deferred", time, serverQueryTime };
+      console.log(out);
+      return { ...out, rows };
+    }),
 });

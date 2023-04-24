@@ -56,6 +56,11 @@ export default function React() {
     },
   );
 
+  const { data: deferredJoin } = api.pagination.deferredJoin.useQuery(
+    undefined,
+    trpcOpts,
+  );
+
   return (
     <div className="flex flex-col gap-4">
       <Metrics />
@@ -128,6 +133,11 @@ export default function React() {
           </>
         )}
       </div>
+
+      <Tablita
+        data={deferredJoin}
+        title="deferredJoin ✅😱!"
+      />
     </div>
   );
 }
