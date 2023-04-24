@@ -71,4 +71,6 @@ testing serverless / sql stuff ftw! 🌌
 - [x] hashing with md5 for compacting data
 - [x] simple queue
 - [x] summary tables
-- [ ] meta tales: SELECT * FROM film_narrow INNER JOIN film_addendum ON film_narrow.id = film_addendum.film_id
+- [ ] meta tales: SELECT * FROM film_narrow INNER JOIN film_addendum ON
+      film_narrow.id = film_addendum.film_id
+- [x] offset pagination

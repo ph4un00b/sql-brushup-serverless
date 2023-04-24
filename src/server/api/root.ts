@@ -8,6 +8,7 @@ import { queriesRouter } from "./routers/queries";
 import { hashingRouter } from "./routers/hashing";
 import { queueRouter } from "./routers/queue";
 import { sumRouter } from "./routers/summary";
+import { paginationRouter } from "./routers/pagination";
 
 /**
  * This is the primary router for your server.
@@ -24,6 +25,7 @@ export const appRouter = createTRPCRouter({
   hashing: hashingRouter,
   queue: queueRouter,
   sum: sumRouter,
+  pagination: paginationRouter,
 });
 
 // export type definition of API
